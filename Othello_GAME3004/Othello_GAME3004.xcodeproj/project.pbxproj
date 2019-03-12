@@ -1,0 +1,613 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		147014D4223837D2002FA488 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147014D3223837D2002FA488 /* AppDelegate.swift */; };
+		147014D6223837D2002FA488 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 147014D5223837D2002FA488 /* GameScene.sks */; };
+		147014D8223837D2002FA488 /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = 147014D7223837D2002FA488 /* Actions.sks */; };
+		147014DA223837D2002FA488 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147014D9223837D2002FA488 /* GameScene.swift */; };
+		147014DC223837D2002FA488 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147014DB223837D2002FA488 /* GameViewController.swift */; };
+		147014DF223837D2002FA488 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 147014DD223837D2002FA488 /* Main.storyboard */; };
+		147014E1223837D4002FA488 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 147014E0223837D4002FA488 /* Assets.xcassets */; };
+		147014E4223837D4002FA488 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 147014E2223837D4002FA488 /* LaunchScreen.storyboard */; };
+		147014EF223837D4002FA488 /* Othello_GAME3004Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147014EE223837D4002FA488 /* Othello_GAME3004Tests.swift */; };
+		147014FA223837D4002FA488 /* Othello_GAME3004UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147014F9223837D4002FA488 /* Othello_GAME3004UITests.swift */; };
+		14701508223838FF002FA488 /* Othello.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14701507223838FF002FA488 /* Othello.swift */; };
+		1470150A22383DD1002FA488 /* MainMenuScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1470150922383DD1002FA488 /* MainMenuScene.swift */; };
+		1470150C22384C6C002FA488 /* HowToPlayScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1470150B22384C6C002FA488 /* HowToPlayScene.swift */; };
+		1470150E223852FF002FA488 /* StartScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1470150D223852FF002FA488 /* StartScene.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		147014EB223837D4002FA488 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 147014C8223837D2002FA488 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 147014CF223837D2002FA488;
+			remoteInfo = Othello_GAME3004;
+		};
+		147014F6223837D4002FA488 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 147014C8223837D2002FA488 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 147014CF223837D2002FA488;
+			remoteInfo = Othello_GAME3004;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		147014D0223837D2002FA488 /* Othello_GAME3004.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Othello_GAME3004.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		147014D3223837D2002FA488 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		147014D5223837D2002FA488 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
+		147014D7223837D2002FA488 /* Actions.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Actions.sks; sourceTree = "<group>"; };
+		147014D9223837D2002FA488 /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
+		147014DB223837D2002FA488 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
+		147014DE223837D2002FA488 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		147014E0223837D4002FA488 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		147014E3223837D4002FA488 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		147014E5223837D4002FA488 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		147014EA223837D4002FA488 /* Othello_GAME3004Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Othello_GAME3004Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		147014EE223837D4002FA488 /* Othello_GAME3004Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Othello_GAME3004Tests.swift; sourceTree = "<group>"; };
+		147014F0223837D4002FA488 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		147014F5223837D4002FA488 /* Othello_GAME3004UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Othello_GAME3004UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		147014F9223837D4002FA488 /* Othello_GAME3004UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Othello_GAME3004UITests.swift; sourceTree = "<group>"; };
+		147014FB223837D4002FA488 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		14701507223838FF002FA488 /* Othello.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Othello.swift; sourceTree = "<group>"; };
+		1470150922383DD1002FA488 /* MainMenuScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenuScene.swift; sourceTree = "<group>"; };
+		1470150B22384C6C002FA488 /* HowToPlayScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HowToPlayScene.swift; sourceTree = "<group>"; };
+		1470150D223852FF002FA488 /* StartScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartScene.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		147014CD223837D2002FA488 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		147014E7223837D4002FA488 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		147014F2223837D4002FA488 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		147014C7223837D2002FA488 = {
+			isa = PBXGroup;
+			children = (
+				147014D2223837D2002FA488 /* Othello_GAME3004 */,
+				147014ED223837D4002FA488 /* Othello_GAME3004Tests */,
+				147014F8223837D4002FA488 /* Othello_GAME3004UITests */,
+				147014D1223837D2002FA488 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		147014D1223837D2002FA488 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				147014D0223837D2002FA488 /* Othello_GAME3004.app */,
+				147014EA223837D4002FA488 /* Othello_GAME3004Tests.xctest */,
+				147014F5223837D4002FA488 /* Othello_GAME3004UITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		147014D2223837D2002FA488 /* Othello_GAME3004 */ = {
+			isa = PBXGroup;
+			children = (
+				14701507223838FF002FA488 /* Othello.swift */,
+				147014D3223837D2002FA488 /* AppDelegate.swift */,
+				147014D5223837D2002FA488 /* GameScene.sks */,
+				147014D7223837D2002FA488 /* Actions.sks */,
+				147014D9223837D2002FA488 /* GameScene.swift */,
+				147014DB223837D2002FA488 /* GameViewController.swift */,
+				147014DD223837D2002FA488 /* Main.storyboard */,
+				147014E0223837D4002FA488 /* Assets.xcassets */,
+				147014E2223837D4002FA488 /* LaunchScreen.storyboard */,
+				147014E5223837D4002FA488 /* Info.plist */,
+				1470150922383DD1002FA488 /* MainMenuScene.swift */,
+				1470150B22384C6C002FA488 /* HowToPlayScene.swift */,
+				1470150D223852FF002FA488 /* StartScene.swift */,
+			);
+			path = Othello_GAME3004;
+			sourceTree = "<group>";
+		};
+		147014ED223837D4002FA488 /* Othello_GAME3004Tests */ = {
+			isa = PBXGroup;
+			children = (
+				147014EE223837D4002FA488 /* Othello_GAME3004Tests.swift */,
+				147014F0223837D4002FA488 /* Info.plist */,
+			);
+			path = Othello_GAME3004Tests;
+			sourceTree = "<group>";
+		};
+		147014F8223837D4002FA488 /* Othello_GAME3004UITests */ = {
+			isa = PBXGroup;
+			children = (
+				147014F9223837D4002FA488 /* Othello_GAME3004UITests.swift */,
+				147014FB223837D4002FA488 /* Info.plist */,
+			);
+			path = Othello_GAME3004UITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		147014CF223837D2002FA488 /* Othello_GAME3004 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 147014FE223837D4002FA488 /* Build configuration list for PBXNativeTarget "Othello_GAME3004" */;
+			buildPhases = (
+				147014CC223837D2002FA488 /* Sources */,
+				147014CD223837D2002FA488 /* Frameworks */,
+				147014CE223837D2002FA488 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Othello_GAME3004;
+			productName = Othello_GAME3004;
+			productReference = 147014D0223837D2002FA488 /* Othello_GAME3004.app */;
+			productType = "com.apple.product-type.application";
+		};
+		147014E9223837D4002FA488 /* Othello_GAME3004Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 14701501223837D4002FA488 /* Build configuration list for PBXNativeTarget "Othello_GAME3004Tests" */;
+			buildPhases = (
+				147014E6223837D4002FA488 /* Sources */,
+				147014E7223837D4002FA488 /* Frameworks */,
+				147014E8223837D4002FA488 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				147014EC223837D4002FA488 /* PBXTargetDependency */,
+			);
+			name = Othello_GAME3004Tests;
+			productName = Othello_GAME3004Tests;
+			productReference = 147014EA223837D4002FA488 /* Othello_GAME3004Tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		147014F4223837D4002FA488 /* Othello_GAME3004UITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 14701504223837D4002FA488 /* Build configuration list for PBXNativeTarget "Othello_GAME3004UITests" */;
+			buildPhases = (
+				147014F1223837D4002FA488 /* Sources */,
+				147014F2223837D4002FA488 /* Frameworks */,
+				147014F3223837D4002FA488 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				147014F7223837D4002FA488 /* PBXTargetDependency */,
+			);
+			name = Othello_GAME3004UITests;
+			productName = Othello_GAME3004UITests;
+			productReference = 147014F5223837D4002FA488 /* Othello_GAME3004UITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		147014C8223837D2002FA488 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1010;
+				LastUpgradeCheck = 1010;
+				ORGANIZATIONNAME = Codex;
+				TargetAttributes = {
+					147014CF223837D2002FA488 = {
+						CreatedOnToolsVersion = 10.1;
+					};
+					147014E9223837D4002FA488 = {
+						CreatedOnToolsVersion = 10.1;
+						TestTargetID = 147014CF223837D2002FA488;
+					};
+					147014F4223837D4002FA488 = {
+						CreatedOnToolsVersion = 10.1;
+						TestTargetID = 147014CF223837D2002FA488;
+					};
+				};
+			};
+			buildConfigurationList = 147014CB223837D2002FA488 /* Build configuration list for PBXProject "Othello_GAME3004" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 147014C7223837D2002FA488;
+			productRefGroup = 147014D1223837D2002FA488 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				147014CF223837D2002FA488 /* Othello_GAME3004 */,
+				147014E9223837D4002FA488 /* Othello_GAME3004Tests */,
+				147014F4223837D4002FA488 /* Othello_GAME3004UITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		147014CE223837D2002FA488 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				147014DF223837D2002FA488 /* Main.storyboard in Resources */,
+				147014D6223837D2002FA488 /* GameScene.sks in Resources */,
+				147014E1223837D4002FA488 /* Assets.xcassets in Resources */,
+				147014E4223837D4002FA488 /* LaunchScreen.storyboard in Resources */,
+				147014D8223837D2002FA488 /* Actions.sks in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		147014E8223837D4002FA488 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		147014F3223837D4002FA488 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		147014CC223837D2002FA488 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				147014DA223837D2002FA488 /* GameScene.swift in Sources */,
+				1470150E223852FF002FA488 /* StartScene.swift in Sources */,
+				147014DC223837D2002FA488 /* GameViewController.swift in Sources */,
+				1470150A22383DD1002FA488 /* MainMenuScene.swift in Sources */,
+				147014D4223837D2002FA488 /* AppDelegate.swift in Sources */,
+				1470150C22384C6C002FA488 /* HowToPlayScene.swift in Sources */,
+				14701508223838FF002FA488 /* Othello.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		147014E6223837D4002FA488 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				147014EF223837D4002FA488 /* Othello_GAME3004Tests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		147014F1223837D4002FA488 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				147014FA223837D4002FA488 /* Othello_GAME3004UITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		147014EC223837D4002FA488 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 147014CF223837D2002FA488 /* Othello_GAME3004 */;
+			targetProxy = 147014EB223837D4002FA488 /* PBXContainerItemProxy */;
+		};
+		147014F7223837D4002FA488 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 147014CF223837D2002FA488 /* Othello_GAME3004 */;
+			targetProxy = 147014F6223837D4002FA488 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		147014DD223837D2002FA488 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				147014DE223837D2002FA488 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		147014E2223837D4002FA488 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				147014E3223837D4002FA488 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		147014FC223837D4002FA488 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		147014FD223837D4002FA488 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		147014FF223837D4002FA488 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = Othello_GAME3004/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "codex.Othello-GAME3004";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		14701500223837D4002FA488 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = Othello_GAME3004/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "codex.Othello-GAME3004";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		14701502223837D4002FA488 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = Othello_GAME3004Tests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "codex.Othello-GAME3004Tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Othello_GAME3004.app/Othello_GAME3004";
+			};
+			name = Debug;
+		};
+		14701503223837D4002FA488 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = Othello_GAME3004Tests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "codex.Othello-GAME3004Tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Othello_GAME3004.app/Othello_GAME3004";
+			};
+			name = Release;
+		};
+		14701505223837D4002FA488 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = Othello_GAME3004UITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "codex.Othello-GAME3004UITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Othello_GAME3004;
+			};
+			name = Debug;
+		};
+		14701506223837D4002FA488 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = Othello_GAME3004UITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "codex.Othello-GAME3004UITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Othello_GAME3004;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		147014CB223837D2002FA488 /* Build configuration list for PBXProject "Othello_GAME3004" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				147014FC223837D4002FA488 /* Debug */,
+				147014FD223837D4002FA488 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		147014FE223837D4002FA488 /* Build configuration list for PBXNativeTarget "Othello_GAME3004" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				147014FF223837D4002FA488 /* Debug */,
+				14701500223837D4002FA488 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		14701501223837D4002FA488 /* Build configuration list for PBXNativeTarget "Othello_GAME3004Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				14701502223837D4002FA488 /* Debug */,
+				14701503223837D4002FA488 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		14701504223837D4002FA488 /* Build configuration list for PBXNativeTarget "Othello_GAME3004UITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				14701505223837D4002FA488 /* Debug */,
+				14701506223837D4002FA488 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 147014C8223837D2002FA488 /* Project object */;
+}
