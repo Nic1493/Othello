@@ -38,12 +38,12 @@ class MainMenuScene: SKScene {
         
         soundButton = SKSpriteNode(texture: SKTexture(imageNamed: "soundon"))
         addChild(soundButton)
-        soundButton.position = CGPoint(x: UIScreen.main.bounds.width * 3.5/10, y: UIScreen.main.bounds.height * 3/10)
+        soundButton.position = CGPoint(x: (UIScreen.main.bounds.width / 2) - (soundButton.frame.width / 4) , y: UIScreen.main.bounds.height * 3/10)
         soundButton.setScale(0.5)
         
         quitButton = SKSpriteNode(texture: SKTexture(imageNamed: "quit"))
         addChild(quitButton)
-        quitButton.position = CGPoint(x: UIScreen.main.bounds.width * 6.5/10, y: UIScreen.main.bounds.height * 3/10)
+        quitButton.position = CGPoint(x: (UIScreen.main.bounds.width / 2) + (quitButton.frame.width / 4), y: UIScreen.main.bounds.height * 3/10)
         quitButton.setScale(0.5)
     }
     
@@ -76,7 +76,7 @@ class MainMenuScene: SKScene {
             }
             
             if (quitButton.frame.contains(t.location(in: self))) {
-                exit(0)
+                quitButton.texture = SKTexture(imageNamed: "quit-pressed")
             }
         }
     }
@@ -114,6 +114,31 @@ class MainMenuScene: SKScene {
                     soundButton.texture = SKTexture(imageNamed: "soundon")
                     isSoundOn = true
                 }
+            }
+            
+            if (quitButton.frame.contains(t.location(in: self))) {
+                exit(0)
+            }
+            
+            if (!P1Button.frame.contains(t.location(in: self)) ||
+                !P2Button.frame.contains(t.location(in: self)) ||
+                !howToPlayButton.frame.contains(t.location(in: self)) ||
+                !soundButton.frame.contains(t.location(in: self)) ||
+                !quitButton.frame.contains(t.location(in: self))) {
+                
+                P1Button.texture = SKTexture(imageNamed: "1P");
+                P2Button.texture = SKTexture(imageNamed: "2P");
+                howToPlayButton.texture = SKTexture(imageNamed: "howtoplay");
+                quitButton.texture = SKTexture(imageNamed: "quit")
+                
+                if (isSoundOn) {
+                    soundButton.texture = SKTexture(imageNamed: "soundon")
+                }
+                else
+                {
+                    soundButton.texture = SKTexture(imageNamed: "soundoff")
+                }
+                return;
             }
         }
     }
