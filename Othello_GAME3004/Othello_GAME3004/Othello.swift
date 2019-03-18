@@ -72,7 +72,7 @@ class Othello
 			if r + 1 < boardSize, gameBoard[r + 1][c] == opponent
 			{
 				distanceToEdge = boardSize - 1 - r;
-				for x in 2...distanceToEdge
+				for x in 1...distanceToEdge
 				{
 					if gameBoard[r + x][c] == colour
 					{
@@ -85,7 +85,7 @@ class Othello
 			if r - 1 > -1, gameBoard[r - 1][c] == opponent
 			{
 				distanceToEdge = r;
-				for x in 2...distanceToEdge
+				for x in 1...distanceToEdge
 				{
 					if gameBoard[r - x][c] == colour
 					{
@@ -98,7 +98,7 @@ class Othello
 			if c + 1 < boardSize, gameBoard[r][c + 1] == opponent
 			{
 				distanceToEdge = boardSize - 1 - c;
-				for y in 2...distanceToEdge
+				for y in 1...distanceToEdge
 				{
 					if gameBoard[r][c + y] == colour
 					{
@@ -111,7 +111,7 @@ class Othello
 			if c - 1 > -1, gameBoard[r][c - 1] == opponent
 			{
 				distanceToEdge = c;
-				for y in 2...distanceToEdge
+				for y in 1...distanceToEdge
 				{
 					if gameBoard[r][c - y] == colour
 					{
@@ -124,7 +124,7 @@ class Othello
 			if r + 1 < boardSize, c + 1 < boardSize, gameBoard[r + 1][c + 1] == opponent
 			{
 				distanceToEdge = min(boardSize - 1 - r, boardSize - 1 - c);
-				for xy in 2...distanceToEdge
+				for xy in 1...distanceToEdge
 				{
 					if gameBoard[r + xy][c + xy] == colour
 					{
@@ -136,8 +136,8 @@ class Othello
 			//bottom left
 			if r + 1 < boardSize, c - 1 > -1, gameBoard[r + 1][c - 1] == opponent
 			{
-				distanceToEdge = min(boardSize - 1 - r, boardSize - 1 - c);
-				for xy in 2...distanceToEdge
+				distanceToEdge = min(boardSize - 1 - r, c);
+				for xy in 1...distanceToEdge
 				{
 					if gameBoard[r + xy][c - xy] == colour
 					{
@@ -150,7 +150,7 @@ class Othello
 			if r - 1 > -1, c - 1 > -1, gameBoard[r - 1][c - 1] == opponent
 			{
 				distanceToEdge = min(r, c);
-				for xy in 2...distanceToEdge
+				for xy in 1...distanceToEdge
 				{
 					if gameBoard[r - xy][c - xy] == colour
 					{
@@ -163,7 +163,7 @@ class Othello
 			if r - 1 > -1, c + 1 < boardSize, gameBoard[r - 1][c + 1] == opponent
 			{
 				distanceToEdge = min(r, boardSize - 1 - c);
-				for xy in 2...distanceToEdge
+				for xy in 1...distanceToEdge
 				{
 					if gameBoard[r - xy][c + xy] == colour
 					{
@@ -223,13 +223,11 @@ class Othello
 	func RunCPU(colour: Character)
 	{
 		var possibleValidMoves: [[Int]] = FindValidMoves(colour: colour);
-		/*
-        srand(UInt32(time(nil)));
+		srand(UInt32(time(nil)));
 		let randNum = Int("\(rand())")! % possibleValidMoves.count;
 		let randChoice: [Int] = possibleValidMoves[randNum];
 		print("CPU has selected to make move at \(randChoice)");
 		MakeMove(colour: colour, r: randChoice[0], c: randChoice[1]);
-        */
 	}
 	
 	func FindValidMoves(colour: Character) -> [[Int]]
@@ -273,7 +271,7 @@ class Othello
 	//play against simple AI if singlePlayer == true
 	func PlayGame(singlePlayer: Bool)
 	{
-		var playerTurn = black;
+		var turn = black;
 		
 		if singlePlayer
 		{
@@ -284,16 +282,16 @@ class Othello
 				let r = Int(row!);
 				let c = Int(col!);
 				
-				if ValidMove(colour: playerTurn, r: r!, c: c!)
+				if ValidMove(colour: turn, r: r!, c: c!)
 				{
-					MakeMove(colour: playerTurn, r: r!, c: c!);
+					MakeMove(colour: turn, r: r!, c: c!);
 					
 					//start CPU's turn
-					playerTurn = white;
+					turn = white;
 					print("CPU's turn.");
-					RunCPU(colour: playerTurn);
+					RunCPU(colour: turn);
 					
-					playerTurn = black;
+					turn = black;
 					print("Player's turn.");
 				}
 				else
@@ -311,18 +309,18 @@ class Othello
 				let r = Int(row!);
 				let c = Int(col!);
 				
-				if ValidMove(colour: playerTurn, r: r!, c: c!)
+				if ValidMove(colour: turn, r: r!, c: c!)
 				{
-					MakeMove(colour: playerTurn, r: r!, c: c!);
+					MakeMove(colour: turn, r: r!, c: c!);
 					
-					if playerTurn == black
+					if turn == black
 					{
-						playerTurn = white;
+						turn = white;
 						print("White's turn.");
 					}
-					else if playerTurn == white
+					else if turn == white
 					{
-						playerTurn = black;
+						turn = black;
 						print("Black's turn.");
 					}
 				}
@@ -336,4 +334,4 @@ class Othello
 }
 
 let game = Othello();
-//game.PlayGame(singlePlayer: true);
+game.PlayGame(singlePlayer: false);
