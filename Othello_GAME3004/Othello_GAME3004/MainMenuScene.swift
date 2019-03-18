@@ -17,9 +17,15 @@ class MainMenuScene: SKScene {
     var soundButton: SKSpriteNode!
     var quitButton: SKSpriteNode!
     var isSoundOn: Bool = true
+    var background: SKSpriteNode!
     
     override init(size: CGSize) {
         super.init(size: size)
+        background = SKSpriteNode(imageNamed: "cherry-wood")
+        background?.size = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+        background?.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2)
+        background?.zPosition = -1;
+        addChild(background)
         
         P1Button = SKSpriteNode(texture: SKTexture(imageNamed: "1P"))
         addChild(P1Button)
@@ -86,21 +92,21 @@ class MainMenuScene: SKScene {
             if (P1Button.frame.contains(t.location(in: self))) {
                 P1Button.texture = SKTexture(imageNamed: "1P")
                 let scene = GameScene(size: self.size)
-                let transition = SKTransition.moveIn(with: .right, duration: 0.5)
+                let transition = SKTransition.doorsOpenHorizontal(withDuration: 0.5)
                 self.view?.presentScene(scene, transition:transition)
             }
             
             if (P2Button.frame.contains(t.location(in: self))) {
                 P2Button.texture = SKTexture(imageNamed: "2P")
                 let scene = GameScene(size: self.size)
-                let transition = SKTransition.moveIn(with: .right, duration: 0.5)
+                let transition = SKTransition.doorsOpenHorizontal(withDuration: 0.5)
                 self.view?.presentScene(scene, transition:transition)
             }
             
             if (howToPlayButton.frame.contains(t.location(in: self))) {
                 howToPlayButton.texture = SKTexture(imageNamed: "howtoplay")
                 let scene = HowToPlayScene(size: self.size)
-                let transition = SKTransition.moveIn(with: .left, duration: 0.5)
+                let transition = SKTransition.moveIn(with: .up, duration: 0.5)
                 self.view?.presentScene(scene, transition:transition)
             }
             

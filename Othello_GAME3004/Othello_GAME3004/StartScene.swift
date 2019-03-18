@@ -29,7 +29,7 @@ class StartScene: SKScene {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         for t in touches {
             let scene = MainMenuScene(size: self.size)
-            let transition = SKTransition.moveIn(with: .up, duration: 0.5)
+            let transition = SKTransition.crossFade(withDuration: 0.5)
             self.view?.presentScene(scene, transition:transition)
         }
     }
