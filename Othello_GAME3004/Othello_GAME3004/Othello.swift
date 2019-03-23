@@ -223,8 +223,9 @@ class Othello
 	func RunCPU(colour: Character)
 	{
 		var possibleValidMoves: [[Int]] = FindValidMoves(colour: colour);
-		srand(UInt32(time(nil)));
-		let randNum = Int("\(rand())")! % possibleValidMoves.count;
+		//srand(UInt32(time(nil)));
+		//let randNum = Int("\(rand())")! % possibleValidMoves.count;
+        let randNum: Int = Int(arc4random_uniform(UInt32(possibleValidMoves.count)));
 		let randChoice: [Int] = possibleValidMoves[randNum];
 		print("CPU has selected to make move at \(randChoice)");
 		MakeMove(colour: colour, r: randChoice[0], c: randChoice[1]);
@@ -334,4 +335,4 @@ class Othello
 }
 
 let game = Othello();
-game.PlayGame(singlePlayer: false);
+//game.PlayGame(singlePlayer: false);

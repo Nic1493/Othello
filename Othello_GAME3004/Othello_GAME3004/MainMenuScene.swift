@@ -26,31 +26,34 @@ class MainMenuScene: SKScene {
         background?.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2)
         background?.zPosition = -1;
         addChild(background)
-        
-        P1Button = SKSpriteNode(texture: SKTexture(imageNamed: "1P"))
-        addChild(P1Button)
-        P1Button.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height * 3/5)
-        P1Button.setScale(0.5)
-        
-        P2Button = SKSpriteNode(texture: SKTexture(imageNamed: "2P"))
-        addChild(P2Button)
-        P2Button.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2)
-        P2Button.setScale(0.5)
-        
-        howToPlayButton = SKSpriteNode(texture: SKTexture(imageNamed: "howtoplay"))
-        addChild(howToPlayButton)
-        howToPlayButton.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height * 2/5)
-        howToPlayButton.setScale(0.5)
+       
+        quitButton = SKSpriteNode(texture: SKTexture(imageNamed: "quit"))
+        addChild(quitButton)
+        quitButton.position = CGPoint(x: (UIScreen.main.bounds.width / 2) + (quitButton.frame.width / 4), y: UIScreen.main.bounds.height * 3/10)
+        quitButton.setScale(0.5)
         
         soundButton = SKSpriteNode(texture: SKTexture(imageNamed: "soundon"))
         addChild(soundButton)
         soundButton.position = CGPoint(x: (UIScreen.main.bounds.width / 2) - (soundButton.frame.width / 4) , y: UIScreen.main.bounds.height * 3/10)
         soundButton.setScale(0.5)
         
-        quitButton = SKSpriteNode(texture: SKTexture(imageNamed: "quit"))
-        addChild(quitButton)
-        quitButton.position = CGPoint(x: (UIScreen.main.bounds.width / 2) + (quitButton.frame.width / 4), y: UIScreen.main.bounds.height * 3/10)
-        quitButton.setScale(0.5)
+        howToPlayButton = SKSpriteNode(texture: SKTexture(imageNamed: "howtoplay"))
+        addChild(howToPlayButton)
+        //howToPlayButton.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height * 2/5)
+        howToPlayButton.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: soundButton.frame.maxY + howToPlayButton.frame.height / 4)
+        howToPlayButton.setScale(0.5)
+        
+        P2Button = SKSpriteNode(texture: SKTexture(imageNamed: "2P"))
+        addChild(P2Button)
+        //P2Button.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2)
+        P2Button.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: howToPlayButton.frame.maxY + P2Button.frame.height / 4)
+        P2Button.setScale(0.5)
+        
+        P1Button = SKSpriteNode(texture: SKTexture(imageNamed: "1P"))
+        addChild(P1Button)
+        //P1Button.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height * 3/5)
+        P1Button.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: P2Button.frame.maxY + P1Button.frame.height / 4)
+        P1Button.setScale(0.5)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -72,13 +75,7 @@ class MainMenuScene: SKScene {
             }
             
             if (soundButton.frame.contains(t.location(in: self))) {
-                if (isSoundOn) {
-                    soundButton.texture = SKTexture(imageNamed: "soundon-pressed")
-                }
-                else
-                {
-                    soundButton.texture = SKTexture(imageNamed: "soundoff-pressed")
-                }
+                soundButton.texture = SKTexture(imageNamed: isSoundOn ? "soundon-pressed" : "soundoff-pressed")
             }
             
             if (quitButton.frame.contains(t.location(in: self))) {

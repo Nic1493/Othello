@@ -24,7 +24,7 @@ class HowToPlayScene: SKScene {
         background?.zPosition = -1;
         addChild(background)
         
-        BackButton = SKSpriteNode(texture: SKTexture(imageNamed: "quit"))
+        BackButton = SKSpriteNode(texture: SKTexture(imageNamed: "back"))
         addChild(BackButton)
         BackButton.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 5)
         BackButton.setScale(0.5)
@@ -57,7 +57,7 @@ class HowToPlayScene: SKScene {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         for t in touches {
             if (BackButton.frame.contains(t.location(in: self))) {
-                BackButton.texture = SKTexture(imageNamed: "quit-pressed")
+                BackButton.texture = SKTexture(imageNamed: "back-pressed")
             }
         }
     }
@@ -65,14 +65,14 @@ class HowToPlayScene: SKScene {
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         for t in touches {
             if (BackButton.frame.contains(t.location(in: self))) {
-                BackButton.texture = SKTexture(imageNamed: "quit")
+                BackButton.texture = SKTexture(imageNamed: "back")
                 let scene = MainMenuScene(size: self.size)
                 let transition = SKTransition.moveIn(with: .down, duration: 0.5)
                 self.view?.presentScene(scene, transition:transition)
             }
             
             if (!BackButton.frame.contains(t.location(in: self))) {
-                BackButton.texture = SKTexture(imageNamed: "quit")
+                BackButton.texture = SKTexture(imageNamed: "back")
                 return;
             }
         }
