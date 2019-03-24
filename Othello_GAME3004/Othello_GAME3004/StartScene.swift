@@ -12,9 +12,21 @@ import SpriteKit
 class StartScene: SKScene {
     
     var placeHolderSprite: SKSpriteNode!
+    var title: SKSpriteNode!
+    var background: SKSpriteNode!
     
     override init(size: CGSize) {
         super.init(size: size)
+        title = SKSpriteNode(imageNamed: "title")
+        addChild(title)
+        title?.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height * 0.8)
+        title?.setScale(0.5)
+        
+        background = SKSpriteNode(imageNamed: "cherry-wood")
+        background?.size = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+        background?.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2)
+        background?.zPosition = -1;
+        addChild(background)
         
         placeHolderSprite = SKSpriteNode(texture: SKTexture(imageNamed: "Placeholder"))
         addChild(placeHolderSprite)
@@ -27,10 +39,8 @@ class StartScene: SKScene {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches {
-            let scene = MainMenuScene(size: self.size)
-            let transition = SKTransition.crossFade(withDuration: 0.5)
-            self.view?.presentScene(scene, transition:transition)
-        }
+        let scene = MainMenuScene(size: self.size)
+        let transition = SKTransition.crossFade(withDuration: 0.5)
+        self.view?.presentScene(scene, transition:transition)
     }
 }

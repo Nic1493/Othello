@@ -11,79 +11,134 @@ import GameplayKit
 
 class GameScene: SKScene {
     
-    private var label : SKLabelNode?
-    private var spinnyNode : SKShapeNode?
+    var pauseButton: SKSpriteNode!
     
-    override func didMove(to view: SKView) {
+    var board: SKSpriteNode!
+    var blackDisc: SKSpriteNode!
+    var whiteDisc: SKSpriteNode!
+    
+    //define board size, create game board
+    let boardSize = 8;
+    var gameBoard: [[Character]]!;
+    
+    //tokens (internal)
+    let black: Character = "b";
+    let white: Character = "w";
+    let empty: Character = "e";
+    
+    //amount of discs on the board
+    var whiteCount = 2;
+    var blackCount = 2;
+    
+    
+    override init(size: CGSize) {
+        super.init(size: size)
         
-        // Get label node from scene and store it for use later
-        self.label = self.childNode(withName: "//helloLabel") as? SKLabelNode
-        if let label = self.label {
-            label.alpha = 0.0
-            label.run(SKAction.fadeIn(withDuration: 2.0))
+        //display pause button
+        pauseButton = SKSpriteNode(texture: SKTexture(imageNamed: "pause"))
+        addChild(pauseButton)
+        pauseButton.anchorPoint = CGPoint(x: 0, y: 0)
+        pauseButton.setScale(0.4)
+        pauseButton.position = CGPoint(x: UIScreen.main.bounds.width * 0.05, y: UIScreen.main.bounds.width * 0.05)
+        
+        blackDisc = SKSpriteNode(texture: SKTexture(imageNamed: "black0"))
+        addChild(blackDisc)
+        blackDisc.position = CGPoint(x: -100, y: -100)
+        
+        whiteDisc = SKSpriteNode(texture: SKTexture(imageNamed: "white0"))
+        addChild(whiteDisc)
+        whiteDisc.position = CGPoint(x: -100, y: -100)
+        
+        board = SKSpriteNode(texture: SKTexture(imageNamed: "board"))
+        addChild(board)
+        board.zPosition = -1
+        board.setScale(0.5)
+        board.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2)
+        
+        //keep loop below for debugging
+        /*for i in 0..<boardSize
+        {
+            for j in 0..<boardSize
+            {
+                DrawDisc(colour: white, r: i, c: j)
+            }
+        }*/
+        
+        InitGameBoard()
+    }
+    
+    //init. game state
+    func InitGameBoard(){
+        gameBoard = [[Character]](repeating: [Character](repeating: " ", count: boardSize), count: boardSize);
+        
+        for i in 0..<boardSize
+        {
+            for j in 0..<boardSize
+            {
+                gameBoard[i][j] = empty;
+            }
         }
         
-        // Create shape node to use during mouse interaction
-        let w = (self.size.width + self.size.height) * 0.05
-        self.spinnyNode = SKShapeNode.init(rectOf: CGSize.init(width: w, height: w), cornerRadius: w * 0.3)
+        gameBoard[3][3] = white;
+        gameBoard[3][4] = black;
+        gameBoard[4][3] = black;
+        gameBoard[4][4] = white;
         
-        if let spinnyNode = self.spinnyNode {
-            spinnyNode.lineWidth = 2.5
-            
-            spinnyNode.run(SKAction.repeatForever(SKAction.rotate(byAngle: CGFloat(Double.pi), duration: 1)))
-            spinnyNode.run(SKAction.sequence([SKAction.wait(forDuration: 0.5),
-                                              SKAction.fadeOut(withDuration: 0.5),
-                                              SKAction.removeFromParent()]))
+        DrawDisc(colour: white, r: 3, c: 3);
+        DrawDisc(colour: black, r: 3, c: 4);
+        DrawDisc(colour: black, r: 4, c: 3);
+        DrawDisc(colour: white, r: 4, c: 4);
+    }
+    
+    //renders <colour> disc at position [r, c] on the game board
+    func DrawDisc(colour: Character, r: Int, c: Int) {
+
+        if colour == black
+        {
+            let newBlackDisc = blackDisc.copy() as! SKSpriteNode
+            addChild(newBlackDisc)
+            newBlackDisc.anchorPoint = CGPoint(x: 0, y: 1)
+            newBlackDisc.setScale(73.0 / 160.0)
+            newBlackDisc.position = CGPoint(x: board.frame.minX + board.frame.width * (CGFloat(c) / 8), y: board.frame.maxY - board.frame.height * (CGFloat(r) / 8))
+        }
+        if colour == white
+        {
+            let newWhiteDisc = whiteDisc.copy() as! SKSpriteNode
+            addChild(newWhiteDisc)
+            newWhiteDisc.anchorPoint = CGPoint(x: 0, y: 1)
+            newWhiteDisc.setScale(73.0 / 160.0)
+            newWhiteDisc.position = CGPoint(x: board.frame.minX + board.frame.width * (CGFloat(c) / 8), y: board.frame.maxY - board.frame.height * (CGFloat(r) / 8))
         }
     }
     
-    
-    func touchDown(atPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.green
-            self.addChild(n)
-        }
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("Init(coder: ) has not been implemented")
     }
     
-    func touchMoved(toPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.blue
-            self.addChild(n)
-        }
-    }
-    
-    func touchUp(atPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.red
-            self.addChild(n)
-        }
+    // Called before each frame is rendered
+    override func update(_ currentTime: TimeInterval) {
+        
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if let label = self.label {
-            label.run(SKAction.init(named: "Pulse")!, withKey: "fadeInOut")
+        for t in touches {
+            if board.frame.contains(t.location(in: self)) {
+                print(t.location(in: self))
+            }
+            if (pauseButton.frame.contains(t.location(in: self))) {
+                pauseButton.texture = SKTexture(imageNamed: "pause-pressed")
+            }
         }
-        
-        for t in touches { self.touchDown(atPoint: t.location(in: self)) }
-    }
-    
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchMoved(toPoint: t.location(in: self)) }
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchUp(atPoint: t.location(in: self)) }
-    }
-    
-    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchUp(atPoint: t.location(in: self)) }
-    }
-    
-    
-    override func update(_ currentTime: TimeInterval) {
-        // Called before each frame is rendered
+        for t in touches {
+            if (pauseButton.frame.contains(t.location(in: self))) {
+                pauseButton.texture = SKTexture(imageNamed: "pause")
+                let scene = MainMenuScene(size: self.size)
+                let transition = SKTransition.doorsCloseHorizontal(withDuration: 0.5)
+                self.view?.presentScene(scene, transition:transition)
+            }
+        }
     }
 }

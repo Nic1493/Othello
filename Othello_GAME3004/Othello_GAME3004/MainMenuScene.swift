@@ -18,6 +18,7 @@ class MainMenuScene: SKScene {
     var quitButton: SKSpriteNode!
     var isSoundOn: Bool = true
     var background: SKSpriteNode!
+    var title: SKSpriteNode!
     
     override init(size: CGSize) {
         super.init(size: size)
@@ -26,6 +27,11 @@ class MainMenuScene: SKScene {
         background?.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2)
         background?.zPosition = -1;
         addChild(background)
+        
+        title = SKSpriteNode(imageNamed: "title")
+        addChild(title)
+        title?.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height * 0.8)
+        title?.setScale(0.5)
        
         quitButton = SKSpriteNode(texture: SKTexture(imageNamed: "quit"))
         addChild(quitButton)
