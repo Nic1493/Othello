@@ -22,7 +22,7 @@
 		1470150C22384C6C002FA488 /* HowToPlayScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1470150B22384C6C002FA488 /* HowToPlayScene.swift */; };
 		1470150E223852FF002FA488 /* StartScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1470150D223852FF002FA488 /* StartScene.swift */; };
 		706237D122485B8700FDD98C /* ClickParticle.sks in Resources */ = {isa = PBXBuildFile; fileRef = 706237CF22485B8700FDD98C /* ClickParticle.sks */; };
-		706237D222485B8700FDD98C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 706237D022485B8700FDD98C /* Assets.xcassets */; };
+		706237D4224864C300FDD98C /* Particle Sprite Atlas.spriteatlas in Resources */ = {isa = PBXBuildFile; fileRef = 706237D3224864C300FDD98C /* Particle Sprite Atlas.spriteatlas */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,7 +64,7 @@
 		1470150B22384C6C002FA488 /* HowToPlayScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HowToPlayScene.swift; sourceTree = "<group>"; };
 		1470150D223852FF002FA488 /* StartScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartScene.swift; sourceTree = "<group>"; };
 		706237CF22485B8700FDD98C /* ClickParticle.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = ClickParticle.sks; path = Assets.xcassets/ClickParticle.sks; sourceTree = "<group>"; };
-		706237D022485B8700FDD98C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Assets.xcassets/Assets.xcassets; sourceTree = "<group>"; };
+		706237D3224864C300FDD98C /* Particle Sprite Atlas.spriteatlas */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "Particle Sprite Atlas.spriteatlas"; path = "Assets.xcassets/Particle Sprite Atlas.spriteatlas"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,6 +115,7 @@
 		147014D2223837D2002FA488 /* Othello_GAME3004 */ = {
 			isa = PBXGroup;
 			children = (
+				706237D3224864C300FDD98C /* Particle Sprite Atlas.spriteatlas */,
 				14701507223838FF002FA488 /* Othello.swift */,
 				147014D3223837D2002FA488 /* AppDelegate.swift */,
 				147014D5223837D2002FA488 /* GameScene.sks */,
@@ -124,7 +125,6 @@
 				147014DD223837D2002FA488 /* Main.storyboard */,
 				147014E0223837D4002FA488 /* Assets.xcassets */,
 				706237CF22485B8700FDD98C /* ClickParticle.sks */,
-				706237D022485B8700FDD98C /* Assets.xcassets */,
 				147014E2223837D4002FA488 /* LaunchScreen.storyboard */,
 				147014E5223837D4002FA488 /* Info.plist */,
 				1470150922383DD1002FA488 /* MainMenuScene.swift */,
@@ -257,10 +257,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				706237D122485B8700FDD98C /* ClickParticle.sks in Resources */,
+				706237D4224864C300FDD98C /* Particle Sprite Atlas.spriteatlas in Resources */,
 				147014DF223837D2002FA488 /* Main.storyboard in Resources */,
 				147014D6223837D2002FA488 /* GameScene.sks in Resources */,
 				147014E1223837D4002FA488 /* Assets.xcassets in Resources */,
-				706237D222485B8700FDD98C /* Assets.xcassets in Resources */,
 				147014E4223837D4002FA488 /* LaunchScreen.storyboard in Resources */,
 				147014D8223837D2002FA488 /* Actions.sks in Resources */,
 			);
