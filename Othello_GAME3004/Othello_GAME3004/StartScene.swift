@@ -20,7 +20,7 @@ class StartScene: SKScene {
         title = SKSpriteNode(imageNamed: "title")
         addChild(title)
         title?.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height * 0.8)
-        title?.setScale(0.5)
+        title?.setScale(UIScreen.main.bounds.width / (UIScreen.main.bounds.width * 2))
         
         background = SKSpriteNode(imageNamed: "menu-BG")
         background?.size = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
@@ -31,7 +31,7 @@ class StartScene: SKScene {
         placeHolderSprite = SKSpriteNode(texture: SKTexture(imageNamed: "Placeholder"))
         addChild(placeHolderSprite)
         placeHolderSprite.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2)
-        placeHolderSprite.setScale(1.0)
+        placeHolderSprite.setScale(UIScreen.main.bounds.width/UIScreen.main.bounds.width)
     }
     
     required init?(coder aDecoder: NSCoder) {

@@ -28,14 +28,13 @@ class HowToPlayScene: SKScene {
         backButton = SKSpriteNode(texture: SKTexture(imageNamed: "back"))
         addChild(backButton)
         backButton.anchorPoint = CGPoint(x: 0, y: 0)
-        backButton.setScale(0.3)
+        backButton.setScale(UIScreen.main.bounds.width / (UIScreen.main.bounds.width * 3))
         backButton.position = CGPoint(x: UIScreen.main.bounds.width * 0.05, y: UIScreen.main.bounds.width * 0.05)
-        
         
         //label = SKLabelNode(fontNamed: "Chalkduster")
         titleLabel = SKLabelNode(text: "How To Play")
         titleLabel.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height * 8.5/10)
-        titleLabel.fontSize = 50
+        titleLabel.fontSize = UIScreen.main.bounds.width/8
         addChild(titleLabel)
         
         instructionsLabel = SKLabelNode(text: "Objective of the Game: \nTo have the most discs on the board\nwhen the game ends. \n\nHow to Play: \nEach player take turns to place down \none disc on the board. The player's \ndisc must be placed beside the \nopposing player's disc to make a line \nwhere the last disc is the player's disc.")
@@ -44,7 +43,7 @@ class HowToPlayScene: SKScene {
         instructionsLabel.preferredMaxLayoutWidth = 500
         instructionsLabel.lineBreakMode = NSLineBreakMode.byCharWrapping
         instructionsLabel.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height * 4/10)
-        instructionsLabel.fontSize = 25
+        instructionsLabel.fontSize = UIScreen.main.bounds.width/18
         addChild(instructionsLabel)
     }
     

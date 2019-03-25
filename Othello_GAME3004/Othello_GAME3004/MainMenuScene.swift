@@ -24,6 +24,7 @@ class MainMenuScene: SKScene {
     override init(size: CGSize) {
         super.init(size: size)
         
+        print(UIScreen.main.bounds.width)
 
         background = SKSpriteNode(imageNamed: "menu-BG")
         background?.size = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
@@ -34,35 +35,35 @@ class MainMenuScene: SKScene {
         title = SKSpriteNode(imageNamed: "title")
         addChild(title)
         title?.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height * 0.8)
-        title?.setScale(0.5)
+        title?.setScale(UIScreen.main.bounds.width / (UIScreen.main.bounds.width * 2))
        
         quitButton = SKSpriteNode(texture: SKTexture(imageNamed: "quit"))
         addChild(quitButton)
         quitButton.position = CGPoint(x: (UIScreen.main.bounds.width / 2) + (quitButton.frame.width / 4), y: UIScreen.main.bounds.height * 3/10)
-        quitButton.setScale(0.5)
+        quitButton.setScale(UIScreen.main.bounds.width / (UIScreen.main.bounds.width * 2))
         
         soundButton = SKSpriteNode(texture: SKTexture(imageNamed: "soundon"))
         addChild(soundButton)
         soundButton.position = CGPoint(x: (UIScreen.main.bounds.width / 2) - (soundButton.frame.width / 4) , y: UIScreen.main.bounds.height * 3/10)
-        soundButton.setScale(0.5)
+        soundButton.setScale(UIScreen.main.bounds.width / (UIScreen.main.bounds.width * 2))
         
         howToPlayButton = SKSpriteNode(texture: SKTexture(imageNamed: "howtoplay"))
         addChild(howToPlayButton)
         //howToPlayButton.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height * 2/5)
         howToPlayButton.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: soundButton.frame.maxY + howToPlayButton.frame.height / 4)
-        howToPlayButton.setScale(0.5)
+        howToPlayButton.setScale(UIScreen.main.bounds.width / (UIScreen.main.bounds.width * 2))
         
         P2Button = SKSpriteNode(texture: SKTexture(imageNamed: "2P"))
         addChild(P2Button)
         //P2Button.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2)
         P2Button.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: howToPlayButton.frame.maxY + P2Button.frame.height / 4)
-        P2Button.setScale(0.5)
+        P2Button.setScale(UIScreen.main.bounds.width / (UIScreen.main.bounds.width * 2))
         
         P1Button = SKSpriteNode(texture: SKTexture(imageNamed: "1P"))
         addChild(P1Button)
         //P1Button.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height * 3/5)
         P1Button.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: P2Button.frame.maxY + P1Button.frame.height / 4)
-        P1Button.setScale(0.5)
+        P1Button.setScale(UIScreen.main.bounds.width / (UIScreen.main.bounds.width * 2))
     }
     
     required init?(coder aDecoder: NSCoder) {
