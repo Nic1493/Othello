@@ -43,10 +43,10 @@ class GameScene: SKScene {
         background?.zPosition = -2;
         addChild(background)
         
-        pauseButton = SKSpriteNode(texture: SKTexture(imageNamed: "pause"))
+        pauseButton = SKSpriteNode(texture: SKTexture(imageNamed: "back"))
         addChild(pauseButton)
         pauseButton.anchorPoint = CGPoint(x: 0, y: 0)
-        pauseButton.setScale(0.4)
+        pauseButton.setScale(0.3)
         pauseButton.position = CGPoint(x: UIScreen.main.bounds.width * 0.05, y: UIScreen.main.bounds.width * 0.05)
         
         board = SKSpriteNode(texture: SKTexture(imageNamed: "board"))
@@ -97,7 +97,7 @@ class GameScene: SKScene {
             let newBlackDisc = blackDisc.copy() as! SKSpriteNode
             addChild(newBlackDisc)
             newBlackDisc.anchorPoint = CGPoint(x: -greenRatio / 2, y: 1 + greenRatio / 2)
-            newBlackDisc.setScale(greenRatio / 2)
+            newBlackDisc.setScale(greenRatio * board.xScale)
             newBlackDisc.position = CGPoint(x: board.frame.width * (CGFloat(c) / 8) * greenRatio, y: board.frame.maxY - board.frame.height * (CGFloat(r) / 8) * greenRatio)
             newBlackDisc.position.x += board.frame.minX + CGFloat(c) * 2
             newBlackDisc.position.y -= CGFloat(r) * 2
@@ -107,7 +107,7 @@ class GameScene: SKScene {
             let newWhiteDisc = whiteDisc.copy() as! SKSpriteNode
             addChild(newWhiteDisc)
             newWhiteDisc.anchorPoint = CGPoint(x: -greenRatio / 2, y: 1 + greenRatio / 2)
-            newWhiteDisc.setScale(greenRatio / 2)
+            newWhiteDisc.setScale(greenRatio * board.xScale)
             newWhiteDisc.position = CGPoint(x: board.frame.width * (CGFloat(c) / 8) * greenRatio, y: board.frame.maxY - board.frame.height * (CGFloat(r) / 8) * greenRatio)
             newWhiteDisc.position.x += board.frame.minX + CGFloat(c) * 2
             newWhiteDisc.position.y -= CGFloat(r) * 2
@@ -132,7 +132,10 @@ class GameScene: SKScene {
             scene?.addChild(clickParticle)
             
             if board.frame.contains(t.location(in: self)) {
-                print(t.location(in: self))
+                print(board.frame.minX)
+                print(board.frame.maxX)
+                print(board.frame.minY)
+                print(board.frame.maxY)
             }
             if (pauseButton.frame.contains(t.location(in: self))) {
                 pauseButton.texture = SKTexture(imageNamed: "pause-pressed")
@@ -148,6 +151,9 @@ class GameScene: SKScene {
                 let transition = SKTransition.doorsCloseHorizontal(withDuration: 0.5)
                 self.view?.presentScene(scene, transition:transition)
             }
+            
+            
+            //DrawDisc(colour: black, r: <#T##Int#>, c: <#T##Int#>)
         }
     }
 }

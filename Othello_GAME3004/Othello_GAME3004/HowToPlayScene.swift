@@ -10,7 +10,7 @@ import Foundation
 import SpriteKit
 
 class HowToPlayScene: SKScene {
-    var BackButton: SKSpriteNode!
+    var backButton: SKSpriteNode!
     var placeHolderSprite: SKSpriteNode!
     var background: SKSpriteNode!
     var titleLabel: SKLabelNode!
@@ -25,15 +25,12 @@ class HowToPlayScene: SKScene {
         background?.zPosition = -1;
         addChild(background)
         
-        BackButton = SKSpriteNode(texture: SKTexture(imageNamed: "back"))
-        addChild(BackButton)
-        BackButton.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 5)
-        BackButton.setScale(0.5)
+        backButton = SKSpriteNode(texture: SKTexture(imageNamed: "back"))
+        addChild(backButton)
+        backButton.anchorPoint = CGPoint(x: 0, y: 0)
+        backButton.setScale(0.3)
+        backButton.position = CGPoint(x: UIScreen.main.bounds.width * 0.05, y: UIScreen.main.bounds.width * 0.05)
         
-        placeHolderSprite = SKSpriteNode(texture: SKTexture(imageNamed: "Flower"))
-        //addChild(placeHolderSprite)
-        placeHolderSprite.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2)
-        placeHolderSprite.setScale(1.0)
         
         //label = SKLabelNode(fontNamed: "Chalkduster")
         titleLabel = SKLabelNode(text: "How To Play")
@@ -61,23 +58,23 @@ class HowToPlayScene: SKScene {
             clickParticle.position = t.location(in: self)
             scene?.addChild(clickParticle)
             
-            if (BackButton.frame.contains(t.location(in: self))) {
-                BackButton.texture = SKTexture(imageNamed: "back-pressed")
+            if (backButton.frame.contains(t.location(in: self))) {
+                backButton.texture = SKTexture(imageNamed: "back-pressed")
             }
         }
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         for t in touches {
-            if (BackButton.frame.contains(t.location(in: self))) {
-                BackButton.texture = SKTexture(imageNamed: "back")
+            if (backButton.frame.contains(t.location(in: self))) {
+                backButton.texture = SKTexture(imageNamed: "back")
                 let scene = MainMenuScene(size: self.size)
                 let transition = SKTransition.moveIn(with: .down, duration: 0.5)
                 self.view?.presentScene(scene, transition:transition)
             }
             
-            if (!BackButton.frame.contains(t.location(in: self))) {
-                BackButton.texture = SKTexture(imageNamed: "back")
+            if (!backButton.frame.contains(t.location(in: self))) {
+                backButton.texture = SKTexture(imageNamed: "back")
                 return;
             }
         }
