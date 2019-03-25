@@ -16,6 +16,8 @@ class GameScene: SKScene {
     var board: SKSpriteNode!
     var blackDisc: SKSpriteNode!
     var whiteDisc: SKSpriteNode!
+    var background: SKSpriteNode!
+    var clickParticle: SKEmitterNode!
     
     //define board size, create game board
     let boardSize = 8;
@@ -33,6 +35,12 @@ class GameScene: SKScene {
     
     override init(size: CGSize) {
         super.init(size: size)
+        
+        background = SKSpriteNode(imageNamed: "menu-BG")
+        background?.size = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+        background?.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2)
+        background?.zPosition = -2;
+        addChild(background)
         
         //display pause button
         pauseButton = SKSpriteNode(texture: SKTexture(imageNamed: "pause"))
@@ -122,6 +130,11 @@ class GameScene: SKScene {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         for t in touches {
+            
+            clickParticle = SKEmitterNode(fileNamed: "ClickParticle.sks")
+            clickParticle.position = t.location(in: self)
+            scene?.addChild(clickParticle)
+            
             if board.frame.contains(t.location(in: self)) {
                 print(t.location(in: self))
             }

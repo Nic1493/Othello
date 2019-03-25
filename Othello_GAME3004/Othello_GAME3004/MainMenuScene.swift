@@ -19,10 +19,13 @@ class MainMenuScene: SKScene {
     var isSoundOn: Bool = true
     var background: SKSpriteNode!
     var title: SKSpriteNode!
+    var clickParticle: SKEmitterNode!
     
     override init(size: CGSize) {
         super.init(size: size)
-        background = SKSpriteNode(imageNamed: "cherry-wood")
+        
+
+        background = SKSpriteNode(imageNamed: "menu-BG")
         background?.size = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
         background?.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2)
         background?.zPosition = -1;
@@ -68,6 +71,11 @@ class MainMenuScene: SKScene {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         for t in touches {
+            
+            clickParticle = SKEmitterNode(fileNamed: "ClickParticle.sks")
+            clickParticle.position = t.location(in: self)
+            scene?.addChild(clickParticle)
+            
             if (P1Button.frame.contains(t.location(in: self))) {
                 P1Button.texture = SKTexture(imageNamed: "1P-pressed")
             }
