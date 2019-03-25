@@ -20,19 +20,23 @@ class GameScene: SKScene {
     var background: SKSpriteNode!
     var clickParticle: SKEmitterNode!
     
+	//region INTERNALS
+	
     //define board size, create game board
     let boardSize = 8;
     var gameBoard: [[Character]]!;
     
-    //tokens (internal)
+    //tokens
     let black: Character = "b";
     let white: Character = "w";
     let empty: Character = "e";
-    
+    var currrentTurn: Character = black;
+	
     //amount of discs on the board
     var whiteCount = 2;
     var blackCount = 2;
-    
+	
+    //endregion
     
     override init(size: CGSize) {
         super.init(size: size)
@@ -115,7 +119,176 @@ class GameScene: SKScene {
             
         }
     }
+	
+	func IsValidMove(colour: Character, r: Int, c: Int) -> Bool {
+		var opponent: Character = empty;
+		if colour == black
+		{
+			opponent = white;
+		}
+		else if colour == white
+		{
+			opponent = black;
+		}
+		
+		//checks if there is an adjacent opponent disc one direction at a time
+		//returns true if at least one direction returns true
+		if gameBoard[r][c] == empty
+		{
+			var distanceToEdge: Int = 0;
+			
+			//bottom
+			if r + 1 < boardSize, gameBoard[r + 1][c] == opponent
+			{
+				distanceToEdge = boardSize - 1 - r;
+				for x in 1...distanceToEdge
+				{
+					if gameBoard[r + x][c] == colour
+					{
+						return true;
+					}
+				}
+			}
+			
+			//top
+			if r - 1 > -1, gameBoard[r - 1][c] == opponent
+			{
+				distanceToEdge = r;
+				for x in 1...distanceToEdge
+				{
+					if gameBoard[r - x][c] == colour
+					{
+						return true;
+					}
+				}
+			}
+			
+			//right
+			if c + 1 < boardSize, gameBoard[r][c + 1] == opponent
+			{
+				distanceToEdge = boardSize - 1 - c;
+				for y in 1...distanceToEdge
+				{
+					if gameBoard[r][c + y] == colour
+					{
+						return true;
+					}
+				}
+			}
+			
+			//left
+			if c - 1 > -1, gameBoard[r][c - 1] == opponent
+			{
+				distanceToEdge = c;
+				for y in 1...distanceToEdge
+				{
+					if gameBoard[r][c - y] == colour
+					{
+						return true;
+					}
+				}
+			}
+			
+			//bottom right
+			if r + 1 < boardSize, c + 1 < boardSize, gameBoard[r + 1][c + 1] == opponent
+			{
+				distanceToEdge = min(boardSize - 1 - r, boardSize - 1 - c);
+				for xy in 1...distanceToEdge
+				{
+					if gameBoard[r + xy][c + xy] == colour
+					{
+						return true;
+					}
+				}
+			}
+			
+			//bottom left
+			if r + 1 < boardSize, c - 1 > -1, gameBoard[r + 1][c - 1] == opponent
+			{
+				distanceToEdge = min(boardSize - 1 - r, c);
+				for xy in 1...distanceToEdge
+				{
+					if gameBoard[r + xy][c - xy] == colour
+					{
+						return true;
+					}
+				}
+			}
+			
+			//top left
+			if r - 1 > -1, c - 1 > -1, gameBoard[r - 1][c - 1] == opponent
+			{
+				distanceToEdge = min(r, c);
+				for xy in 1...distanceToEdge
+				{
+					if gameBoard[r - xy][c - xy] == colour
+					{
+						return true;
+					}
+				}
+			}
+			
+			//top right
+			if r - 1 > -1, c + 1 < boardSize, gameBoard[r - 1][c + 1] == opponent
+			{
+				distanceToEdge = min(r, boardSize - 1 - c);
+				for xy in 1...distanceToEdge
+				{
+					if gameBoard[r - xy][c + xy] == colour
+					{
+						return true;
+					}
+				}
+			}
+		}
+		
+		return false;
+	}
     
+	//places disc on board, immediately calls FlipDiscs()
+	func PlaceDisc(colour: Character, r: Int, c: Int) {
+		gameBoard[r][c] = colour
+		DrawDisc(colour: colour, r: r, c: c)
+		for i in stride(from: 0, to:Double.pi * 2, by:Double.pi / 4)
+		{			
+			FlipDiscs(colour: colour, r: r, c: c, yDelta: Int(round(sin(i))), xDelta: Int(round(sin(i + Double.pi / 2))));
+		}
+	}
+
+	//flips discs according to standard Othello rules
+	func FlipDiscs(colour: Character, r: Int, c: Int, yDelta: Int, xDelta: Int) {
+		var nextRow: Int = r + yDelta;
+		var nextCol: Int = c + xDelta;
+		
+		if nextRow < boardSize, nextRow > -1, nextCol < boardSize, nextCol > -1
+		{
+			while gameBoard[nextRow][nextCol] != empty
+			{
+				if gameBoard[nextRow][nextCol] == colour
+				{
+					while !(r == nextRow && c == nextCol)
+					{
+						gameBoard[nextRow][nextCol] = colour;
+						//animate discs here
+						nextRow -= yDelta;
+						nextCol -= xDelta;
+					}
+					break;
+				}
+				else
+				{
+					nextRow += yDelta;
+					nextCol += xDelta;
+				}
+			}
+		}
+	}
+	
+	
+	func IsGameOver() -> Bool {
+		return blackCount + whiteCount >= boardSize * boardSize;
+	}
+	
     required init?(coder aDecoder: NSCoder) {
         fatalError("Init(coder: ) has not been implemented")
     }
@@ -139,17 +312,19 @@ class GameScene: SKScene {
             clickParticle.position = t.location(in: self)
             scene?.addChild(clickParticle)
             
+			if board.frame.contains(t.location(in: self)) {
+                let row: Int = Int(floor((board.frame.maxY - t.location(in: self).y) / (board.frame.height / 8)))
+                let col: Int = Int(floor((t.location(in: self).x - board.frame.minX) / (board.frame.width / 8)))
+				if ValidMove(colour: currentTurn, r: row, c: col)
+					PlaceDiscs(colour: currentTurn, r: row, c: col)
+				}
+            }
+			
             if (pauseButton.frame.contains(t.location(in: self))) {
                 pauseButton.texture = SKTexture(imageNamed: "pause")
                 let scene = MainMenuScene(size: self.size)
                 let transition = SKTransition.doorsCloseHorizontal(withDuration: 0.5)
                 self.view?.presentScene(scene, transition:transition)
-            }
-            
-            if board.frame.contains(t.location(in: self)) {
-                let row: Int = Int(floor((board.frame.maxY - t.location(in: self).y) / (board.frame.height / 8)))
-                let col: Int = Int(floor((t.location(in: self).x - board.frame.minX) / (board.frame.width / 8)))
-                DrawDisc(colour: black, r: row, c: col)
             }
         }
     }
