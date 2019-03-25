@@ -46,13 +46,13 @@ class GameScene: SKScene {
         pauseButton = SKSpriteNode(texture: SKTexture(imageNamed: "back"))
         addChild(pauseButton)
         pauseButton.anchorPoint = CGPoint(x: 0, y: 0)
-        pauseButton.setScale(0.3)
+        pauseButton.setScale(UIScreen.main.bounds.width / (UIScreen.main.bounds.width * 3))
         pauseButton.position = CGPoint(x: UIScreen.main.bounds.width * 0.05, y: UIScreen.main.bounds.width * 0.05)
         
         board = SKSpriteNode(texture: SKTexture(imageNamed: "board"))
         addChild(board)
         board.zPosition = -1
-        board.setScale(0.5)
+        board.setScale(UIScreen.main.bounds.width / (UIScreen.main.bounds.width * 2))
         board.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2)
         
         blackDisc = SKSpriteNode(texture: SKTexture(imageNamed: "black0"))
