@@ -14,6 +14,7 @@ class GameScene: SKScene {
     var pauseButton: SKSpriteNode!
     
     var board: SKSpriteNode!
+    let greenRatio: CGFloat = 73.0 / 80.0       //the percentage of the board sprite that is green
     var blackDisc: SKSpriteNode!
     var whiteDisc: SKSpriteNode!
     var background: SKSpriteNode!
@@ -42,20 +43,11 @@ class GameScene: SKScene {
         background?.zPosition = -2;
         addChild(background)
         
-        //display pause button
         pauseButton = SKSpriteNode(texture: SKTexture(imageNamed: "pause"))
         addChild(pauseButton)
         pauseButton.anchorPoint = CGPoint(x: 0, y: 0)
         pauseButton.setScale(0.4)
         pauseButton.position = CGPoint(x: UIScreen.main.bounds.width * 0.05, y: UIScreen.main.bounds.width * 0.05)
-        
-        blackDisc = SKSpriteNode(texture: SKTexture(imageNamed: "black0"))
-        addChild(blackDisc)
-        blackDisc.position = CGPoint(x: -100, y: -100)
-        
-        whiteDisc = SKSpriteNode(texture: SKTexture(imageNamed: "white0"))
-        addChild(whiteDisc)
-        whiteDisc.position = CGPoint(x: -100, y: -100)
         
         board = SKSpriteNode(texture: SKTexture(imageNamed: "board"))
         addChild(board)
@@ -63,20 +55,19 @@ class GameScene: SKScene {
         board.setScale(0.5)
         board.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2)
         
-        //keep loop below for debugging
-        /*for i in 0..<boardSize
-        {
-            for j in 0..<boardSize
-            {
-                DrawDisc(colour: white, r: i, c: j)
-            }
-        }*/
+        blackDisc = SKSpriteNode(texture: SKTexture(imageNamed: "black0"))
+        addChild(blackDisc)
+        blackDisc.position = CGPoint(x: -100, y: -100)                      //spawn off-screen. only used for cloning during runtime
         
-        InitGameBoard()
+        whiteDisc = SKSpriteNode(texture: SKTexture(imageNamed: "white0"))
+        addChild(whiteDisc)
+        whiteDisc.position = CGPoint(x: -100, y: -100)                      //same as above
+        
+        InitGameState()
     }
     
-    //init. game state
-    func InitGameBoard(){
+    //sets starting game state internally, draws the starting 4 discs on screen
+    func InitGameState(){
         gameBoard = [[Character]](repeating: [Character](repeating: " ", count: boardSize), count: boardSize);
         
         for i in 0..<boardSize
@@ -105,17 +96,22 @@ class GameScene: SKScene {
         {
             let newBlackDisc = blackDisc.copy() as! SKSpriteNode
             addChild(newBlackDisc)
-            newBlackDisc.anchorPoint = CGPoint(x: 0, y: 1)
-            newBlackDisc.setScale(73.0 / 160.0)
-            newBlackDisc.position = CGPoint(x: board.frame.minX + board.frame.width * (CGFloat(c) / 8), y: board.frame.maxY - board.frame.height * (CGFloat(r) / 8))
+            newBlackDisc.anchorPoint = CGPoint(x: -greenRatio / 2, y: 1 + greenRatio / 2)
+            newBlackDisc.setScale(greenRatio / 2)
+            newBlackDisc.position = CGPoint(x: board.frame.width * (CGFloat(c) / 8) * greenRatio, y: board.frame.maxY - board.frame.height * (CGFloat(r) / 8) * greenRatio)
+            newBlackDisc.position.x += board.frame.minX + CGFloat(c) * 2
+            newBlackDisc.position.y -= CGFloat(r) * 2
         }
         if colour == white
         {
             let newWhiteDisc = whiteDisc.copy() as! SKSpriteNode
             addChild(newWhiteDisc)
-            newWhiteDisc.anchorPoint = CGPoint(x: 0, y: 1)
-            newWhiteDisc.setScale(73.0 / 160.0)
-            newWhiteDisc.position = CGPoint(x: board.frame.minX + board.frame.width * (CGFloat(c) / 8), y: board.frame.maxY - board.frame.height * (CGFloat(r) / 8))
+            newWhiteDisc.anchorPoint = CGPoint(x: -greenRatio / 2, y: 1 + greenRatio / 2)
+            newWhiteDisc.setScale(greenRatio / 2)
+            newWhiteDisc.position = CGPoint(x: board.frame.width * (CGFloat(c) / 8) * greenRatio, y: board.frame.maxY - board.frame.height * (CGFloat(r) / 8) * greenRatio)
+            newWhiteDisc.position.x += board.frame.minX + CGFloat(c) * 2
+            newWhiteDisc.position.y -= CGFloat(r) * 2
+            
         }
     }
     
