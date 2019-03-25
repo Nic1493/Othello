@@ -131,13 +131,7 @@ class GameScene: SKScene {
             clickParticle.position = t.location(in: self)
             scene?.addChild(clickParticle)
             
-            if board.frame.contains(t.location(in: self)) {
-                print(board.frame.minX)
-                print(board.frame.maxX)
-                print(board.frame.minY)
-                print(board.frame.maxY)
-            }
-            if (pauseButton.frame.contains(t.location(in: self))) {
+            if pauseButton.frame.contains(t.location(in: self)) {
                 pauseButton.texture = SKTexture(imageNamed: "pause-pressed")
             }
         }
@@ -152,8 +146,11 @@ class GameScene: SKScene {
                 self.view?.presentScene(scene, transition:transition)
             }
             
-            
-            //DrawDisc(colour: black, r: <#T##Int#>, c: <#T##Int#>)
+            if board.frame.contains(t.location(in: self)) {
+                let row: Int = Int(floor((board.frame.maxY - t.location(in: self).y) / (board.frame.height / 8)))
+                let col: Int = Int(floor((t.location(in: self).x - board.frame.minX) / (board.frame.width / 8)))
+                DrawDisc(colour: black, r: row, c: col)
+            }
         }
     }
 }
