@@ -28,8 +28,11 @@ class HowToPlayScene: SKScene {
         backButton = SKSpriteNode(texture: SKTexture(imageNamed: "back"))
         addChild(backButton)
         backButton.anchorPoint = CGPoint(x: 0, y: 0)
-        backButton.setScale(UIScreen.main.bounds.width / (UIScreen.main.bounds.width * 3))
+        //backButton.setScale(UIScreen.main.bounds.width / (UIScreen.main.bounds.width * 3))
+        
         backButton.position = CGPoint(x: UIScreen.main.bounds.width * 0.05, y: UIScreen.main.bounds.width * 0.05)
+        backButton.xScale = (UIScreen.main.bounds.width / backButton.frame.width) * 0.18
+        backButton.yScale = (UIScreen.main.bounds.height / backButton.frame.height) * 0.05
         
         //label = SKLabelNode(fontNamed: "Chalkduster")
         titleLabel = SKLabelNode(text: "How To Play")
@@ -44,7 +47,7 @@ class HowToPlayScene: SKScene {
         instructionsLabel.lineBreakMode = NSLineBreakMode.byCharWrapping
         instructionsLabel.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height * 4/10)
         instructionsLabel.fontSize = UIScreen.main.bounds.width/18
-        addChild(instructionsLabel)
+        //addChild(instructionsLabel)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -53,9 +56,7 @@ class HowToPlayScene: SKScene {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         for t in touches {
-            clickParticle = SKEmitterNode(fileNamed: "ClickParticle.sks")
-            clickParticle.position = t.location(in: self)
-            scene?.addChild(clickParticle)
+
             
             if (backButton.frame.contains(t.location(in: self))) {
                 backButton.texture = SKTexture(imageNamed: "back-pressed")
@@ -65,6 +66,10 @@ class HowToPlayScene: SKScene {
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         for t in touches {
+            clickParticle = SKEmitterNode(fileNamed: "ClickParticle.sks")
+            clickParticle.position = t.location(in: self)
+            scene?.addChild(clickParticle)
+            
             if (backButton.frame.contains(t.location(in: self))) {
                 backButton.texture = SKTexture(imageNamed: "back")
                 let scene = MainMenuScene(size: self.size)

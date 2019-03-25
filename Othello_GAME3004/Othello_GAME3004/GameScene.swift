@@ -46,7 +46,8 @@ class GameScene: SKScene {
         pauseButton = SKSpriteNode(texture: SKTexture(imageNamed: "back"))
         addChild(pauseButton)
         pauseButton.anchorPoint = CGPoint(x: 0, y: 0)
-        pauseButton.setScale(UIScreen.main.bounds.width / (UIScreen.main.bounds.width * 3))
+        pauseButton.xScale = (UIScreen.main.bounds.width / pauseButton.frame.width) * 0.18
+        pauseButton.yScale = (UIScreen.main.bounds.height / pauseButton.frame.height) * 0.05
         pauseButton.position = CGPoint(x: UIScreen.main.bounds.width * 0.05, y: UIScreen.main.bounds.width * 0.05)
         
         board = SKSpriteNode(texture: SKTexture(imageNamed: "board"))
@@ -126,11 +127,6 @@ class GameScene: SKScene {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         for t in touches {
-            
-            clickParticle = SKEmitterNode(fileNamed: "ClickParticle.sks")
-            clickParticle.position = t.location(in: self)
-            scene?.addChild(clickParticle)
-            
             if pauseButton.frame.contains(t.location(in: self)) {
                 pauseButton.texture = SKTexture(imageNamed: "pause-pressed")
             }
@@ -139,6 +135,10 @@ class GameScene: SKScene {
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         for t in touches {
+            clickParticle = SKEmitterNode(fileNamed: "ClickParticle.sks")
+            clickParticle.position = t.location(in: self)
+            scene?.addChild(clickParticle)
+            
             if (pauseButton.frame.contains(t.location(in: self))) {
                 pauseButton.texture = SKTexture(imageNamed: "pause")
                 let scene = MainMenuScene(size: self.size)
