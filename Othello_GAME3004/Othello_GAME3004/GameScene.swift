@@ -20,6 +20,7 @@ class GameScene: SKScene {
     var whiteDisc: SKSpriteNode!
     var background: SKSpriteNode!
     var clickParticle: SKEmitterNode!
+    var touchStartLoc: CGRect!
     
 	//region INTERNALS
 	
@@ -41,6 +42,7 @@ class GameScene: SKScene {
     
     override init(size: CGSize) {
         super.init(size: size)
+        touchStartLoc = CGRect(x: 0, y: 0, width: 0, height: 0)
         
         background = SKSpriteNode(imageNamed: "menu-BG")
         background?.size = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
@@ -303,6 +305,7 @@ class GameScene: SKScene {
         for t in touches {
             if pauseButton.frame.contains(t.location(in: self)) {
                 pauseButton.texture = SKTexture(imageNamed: "back-pressed")
+                touchStartLoc = pauseButton.frame
             }
         }
     }
@@ -322,13 +325,23 @@ class GameScene: SKScene {
                     }
                 }
             }
-			
-            if (pauseButton.frame.contains(t.location(in: self))) {
+            if (pauseButton.frame.contains(t.location(in: self)) && touchStartLoc!.equalTo(pauseButton.frame)) {
                 let scene = MainMenuScene(size: self.size)
                 let transition = SKTransition.doorsCloseHorizontal(withDuration: 0.5)
                 self.view?.presentScene(scene, transition:transition)
             }
-            pauseButton.texture = SKTexture(imageNamed: "back")
+            
+            if (!pauseButton.frame.contains(t.location(in: self))) {
+                pauseButton.texture = SKTexture(imageNamed: "back")
+                touchStartLoc = CGRect(x: 0, y: 0, width: 0, height: 0)
+                return;
+            }
+            
+            if board.frame.contains(t.location(in: self)) {
+                let row: Int = Int(floor((board.frame.maxY - t.location(in: self).y) / (board.frame.height / 8)))
+                let col: Int = Int(floor((t.location(in: self).x - board.frame.minX) / (board.frame.width / 8)))
+                DrawDisc(colour: black, r: row, c: col)
+            }
         }
     }
 }

@@ -21,6 +21,7 @@ class MainMenuScene: SKScene {
     var soundButton: SKSpriteNode!
     var isSoundOn: Bool = true
     var clickParticle: SKEmitterNode!
+    var touchStartLoc: CGRect!
     
     var audioPlayer = AVAudioPlayer()
     var sfxClickDown: URL!
@@ -28,6 +29,7 @@ class MainMenuScene: SKScene {
     
     override init(size: CGSize) {
         super.init(size: size)
+        touchStartLoc = CGRect(x: 0, y: 0, width: 0, height: 0)
         
         background = SKSpriteNode(imageNamed: "menu-BG")
         background?.size = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
@@ -86,29 +88,36 @@ class MainMenuScene: SKScene {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         for t in touches {
+            print(touchStartLoc)
+            
             if (P1Button.frame.contains(t.location(in: self))) {
                 P1Button.texture = SKTexture(imageNamed: "1P-pressed")
                 PlaySound(url: sfxClickDown)
+                touchStartLoc = P1Button.frame
             }
             
             if (P2Button.frame.contains(t.location(in: self))) {
                 P2Button.texture = SKTexture(imageNamed: "2P-pressed")
                 PlaySound(url: sfxClickDown)
+                touchStartLoc = P2Button.frame
             }
             
             if (howToPlayButton.frame.contains(t.location(in: self))) {
                 howToPlayButton.texture = SKTexture(imageNamed: "howtoplay-pressed")
                 PlaySound(url: sfxClickDown)
+                touchStartLoc = howToPlayButton.frame
             }
             
             if (soundButton.frame.contains(t.location(in: self))) {
                 soundButton.texture = SKTexture(imageNamed: isSoundOn ? "soundon-pressed" : "soundoff-pressed")
                 PlaySound(url: sfxClickDown)
+                touchStartLoc = soundButton.frame
             }
             
             if (quitButton.frame.contains(t.location(in: self))) {
                 quitButton.texture = SKTexture(imageNamed: "quit-pressed")
                 PlaySound(url: sfxClickDown)
+                touchStartLoc = quitButton.frame
             }
         }
     }
@@ -118,8 +127,9 @@ class MainMenuScene: SKScene {
             clickParticle = SKEmitterNode(fileNamed: "ClickParticle.sks")
             clickParticle.position = t.location(in: self)
             scene?.addChild(clickParticle)
+            print(touchStartLoc)
             
-            if (P1Button.frame.contains(t.location(in: self))) {
+            if (P1Button.frame.contains(t.location(in: self)) && touchStartLoc!.equalTo(P1Button.frame)) {
                 P1Button.texture = SKTexture(imageNamed: "1P")
                 PlaySound(url: sfxClickUp)
                 let scene = GameScene(size: self.size)
@@ -127,7 +137,7 @@ class MainMenuScene: SKScene {
                 self.view?.presentScene(scene, transition:transition)
             }
             
-            if (P2Button.frame.contains(t.location(in: self))) {
+            if (P2Button.frame.contains(t.location(in: self)) && touchStartLoc!.equalTo(P2Button.frame)) {
                 P2Button.texture = SKTexture(imageNamed: "2P")
                 PlaySound(url: sfxClickUp)
                 let scene = GameScene(size: self.size)
@@ -135,7 +145,7 @@ class MainMenuScene: SKScene {
                 self.view?.presentScene(scene, transition:transition)
             }
             
-            if (howToPlayButton.frame.contains(t.location(in: self))) {
+            if (howToPlayButton.frame.contains(t.location(in: self)) && touchStartLoc!.equalTo(howToPlayButton.frame)) {
                 howToPlayButton.texture = SKTexture(imageNamed: "howtoplay")
                 PlaySound(url: sfxClickUp)
                 let scene = HowToPlayScene(size: self.size)
@@ -143,7 +153,7 @@ class MainMenuScene: SKScene {
                 self.view?.presentScene(scene, transition:transition)
             }
             
-            if (soundButton.frame.contains(t.location(in: self))) {
+            if (soundButton.frame.contains(t.location(in: self)) && touchStartLoc!.equalTo(soundButton.frame)) {
                 if (isSoundOn) {
                     soundButton.texture = SKTexture(imageNamed: "soundoff")
                     isSoundOn = false;
@@ -157,7 +167,8 @@ class MainMenuScene: SKScene {
                 }
             }
             
-            if (quitButton.frame.contains(t.location(in: self))) {
+            if (quitButton.frame.contains(t.location(in: self)) &&
+                touchStartLoc!.equalTo(quitButton.frame)) {
                 exit(0)
             }
             
@@ -167,11 +178,13 @@ class MainMenuScene: SKScene {
                 !soundButton.frame.contains(t.location(in: self)) ||
                 !quitButton.frame.contains(t.location(in: self))) {
                 
-                P1Button.texture = SKTexture(imageNamed: "1P");
-                P2Button.texture = SKTexture(imageNamed: "2P");
-                howToPlayButton.texture = SKTexture(imageNamed: "howtoplay");
+                P1Button.texture = SKTexture(imageNamed: "1P")
+                P2Button.texture = SKTexture(imageNamed: "2P")
+                howToPlayButton.texture = SKTexture(imageNamed: "howtoplay")
                 quitButton.texture = SKTexture(imageNamed: "quit")
                 soundButton.texture = SKTexture(imageNamed: isSoundOn ? "soundon" : "soundoff")
+                
+                touchStartLoc = CGRect(x: 0, y: 0, width: 0, height: 0)
                 return;
             }
         }
