@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import AVFoundation
 import SpriteKit
 
 class HowToPlayScene: SKScene {
@@ -31,8 +32,7 @@ class HowToPlayScene: SKScene {
         //backButton.setScale(UIScreen.main.bounds.width / (UIScreen.main.bounds.width * 3))
         
         backButton.position = CGPoint(x: UIScreen.main.bounds.width * 0.05, y: UIScreen.main.bounds.width * 0.05)
-        backButton.xScale = (UIScreen.main.bounds.width / backButton.frame.width) * 0.18
-        backButton.yScale = (UIScreen.main.bounds.height / backButton.frame.height) * 0.05
+        backButton.setScale((UIScreen.main.bounds.width / backButton.frame.width) * 0.18)
         
         //label = SKLabelNode(fontNamed: "Chalkduster")
         titleLabel = SKLabelNode(text: "How To Play")

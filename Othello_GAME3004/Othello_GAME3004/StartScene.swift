@@ -20,8 +20,7 @@ class StartScene: SKScene {
         title = SKSpriteNode(imageNamed: "title")
         addChild(title)
         title?.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height * 0.8)
-        title.xScale = (UIScreen.main.bounds.width / title.frame.width) * 0.6
-        title.yScale = (UIScreen.main.bounds.height / title.frame.height) * 0.087
+        title.setScale((UIScreen.main.bounds.width / title.frame.width) * 0.6)
         
         background = SKSpriteNode(imageNamed: "menu-BG")
         background?.size = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)

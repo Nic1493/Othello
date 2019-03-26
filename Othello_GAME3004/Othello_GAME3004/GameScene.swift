@@ -6,6 +6,7 @@
 //  Copyright © 2019 Codex. All rights reserved.
 //
 
+import AVFoundation
 import SpriteKit
 import GameplayKit
 
@@ -30,7 +31,7 @@ class GameScene: SKScene {
     let black: Character = "b";
     let white: Character = "w";
     let empty: Character = "e";
-    var currrentTurn: Character = black;
+    var currentTurn: Character = " ";
 	
     //amount of discs on the board
     var whiteCount = 2;
@@ -50,8 +51,7 @@ class GameScene: SKScene {
         pauseButton = SKSpriteNode(texture: SKTexture(imageNamed: "back"))
         addChild(pauseButton)
         pauseButton.anchorPoint = CGPoint(x: 0, y: 0)
-        pauseButton.xScale = (UIScreen.main.bounds.width / pauseButton.frame.width) * 0.18
-        pauseButton.yScale = (UIScreen.main.bounds.height / pauseButton.frame.height) * 0.05
+        pauseButton.setScale((UIScreen.main.bounds.width / pauseButton.frame.width) * 0.18)
         pauseButton.position = CGPoint(x: UIScreen.main.bounds.width * 0.05, y: UIScreen.main.bounds.width * 0.05)
         
         board = SKSpriteNode(texture: SKTexture(imageNamed: "board"))
@@ -69,6 +69,7 @@ class GameScene: SKScene {
         whiteDisc.position = CGPoint(x: -100, y: -100)                      //same as above
         
         InitGameState()
+        currentTurn = black;
     }
     
     //sets starting game state internally, draws the starting 4 discs on screen
@@ -301,7 +302,7 @@ class GameScene: SKScene {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         for t in touches {
             if pauseButton.frame.contains(t.location(in: self)) {
-                pauseButton.texture = SKTexture(imageNamed: "pause-pressed")
+                pauseButton.texture = SKTexture(imageNamed: "back-pressed")
             }
         }
     }
@@ -312,20 +313,22 @@ class GameScene: SKScene {
             clickParticle.position = t.location(in: self)
             scene?.addChild(clickParticle)
             
-			if board.frame.contains(t.location(in: self)) {
-                let row: Int = Int(floor((board.frame.maxY - t.location(in: self).y) / (board.frame.height / 8)))
-                let col: Int = Int(floor((t.location(in: self).x - board.frame.minX) / (board.frame.width / 8)))
-				if ValidMove(colour: currentTurn, r: row, c: col)
-					PlaceDiscs(colour: currentTurn, r: row, c: col)
-				}
+            if (!IsGameOver()) {
+                if board.frame.contains(t.location(in: self)) {
+                    let row: Int = Int(floor((board.frame.maxY - t.location(in: self).y) / (board.frame.height / 8)))
+                    let col: Int = Int(floor((t.location(in: self).x - board.frame.minX) / (board.frame.width / 8)))
+                    if IsValidMove(colour: currentTurn, r: row, c: col) {
+                    PlaceDisc(colour: currentTurn, r: row, c: col)
+                    }
+                }
             }
 			
             if (pauseButton.frame.contains(t.location(in: self))) {
-                pauseButton.texture = SKTexture(imageNamed: "pause")
                 let scene = MainMenuScene(size: self.size)
                 let transition = SKTransition.doorsCloseHorizontal(withDuration: 0.5)
                 self.view?.presentScene(scene, transition:transition)
             }
+            pauseButton.texture = SKTexture(imageNamed: "back")
         }
     }
 }
