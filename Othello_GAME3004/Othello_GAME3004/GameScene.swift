@@ -19,6 +19,7 @@ class GameScene: SKScene {
     var whiteDisc: SKSpriteNode!
     var background: SKSpriteNode!
     var clickParticle: SKEmitterNode!
+    var touchStartLoc: CGRect!
     
     //define board size, create game board
     let boardSize = 8;
@@ -36,6 +37,7 @@ class GameScene: SKScene {
     
     override init(size: CGSize) {
         super.init(size: size)
+        touchStartLoc = CGRect(x: 0, y: 0, width: 0, height: 0)
         
         background = SKSpriteNode(imageNamed: "menu-BG")
         background?.size = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
@@ -128,7 +130,8 @@ class GameScene: SKScene {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         for t in touches {
             if pauseButton.frame.contains(t.location(in: self)) {
-                pauseButton.texture = SKTexture(imageNamed: "pause-pressed")
+                pauseButton.texture = SKTexture(imageNamed: "back-pressed")
+                touchStartLoc = pauseButton.frame
             }
         }
     }
@@ -139,11 +142,17 @@ class GameScene: SKScene {
             clickParticle.position = t.location(in: self)
             scene?.addChild(clickParticle)
             
-            if (pauseButton.frame.contains(t.location(in: self))) {
-                pauseButton.texture = SKTexture(imageNamed: "pause")
+            if (pauseButton.frame.contains(t.location(in: self)) && touchStartLoc!.equalTo(pauseButton.frame)) {
+                pauseButton.texture = SKTexture(imageNamed: "back")
                 let scene = MainMenuScene(size: self.size)
                 let transition = SKTransition.doorsCloseHorizontal(withDuration: 0.5)
                 self.view?.presentScene(scene, transition:transition)
+            }
+            
+            if (!pauseButton.frame.contains(t.location(in: self))) {
+                pauseButton.texture = SKTexture(imageNamed: "back")
+                touchStartLoc = CGRect(x: 0, y: 0, width: 0, height: 0)
+                return;
             }
             
             if board.frame.contains(t.location(in: self)) {

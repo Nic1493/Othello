@@ -16,9 +16,12 @@ class HowToPlayScene: SKScene {
     var titleLabel: SKLabelNode!
     var instructionsLabel: SKLabelNode!
     var clickParticle: SKEmitterNode!
+    var touchStartLoc: CGRect!
     
     override init(size: CGSize) {
         super.init(size: size)
+        touchStartLoc = CGRect(x: 0, y: 0, width: 0, height: 0)
+        
         background = SKSpriteNode(imageNamed: "menu-BG")
         background?.size = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
         background?.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2)
@@ -56,10 +59,9 @@ class HowToPlayScene: SKScene {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         for t in touches {
-
-            
             if (backButton.frame.contains(t.location(in: self))) {
                 backButton.texture = SKTexture(imageNamed: "back-pressed")
+                touchStartLoc = backButton.frame
             }
         }
     }
@@ -70,7 +72,7 @@ class HowToPlayScene: SKScene {
             clickParticle.position = t.location(in: self)
             scene?.addChild(clickParticle)
             
-            if (backButton.frame.contains(t.location(in: self))) {
+            if (backButton.frame.contains(t.location(in: self)) && touchStartLoc!.equalTo(backButton.frame)) {
                 backButton.texture = SKTexture(imageNamed: "back")
                 let scene = MainMenuScene(size: self.size)
                 let transition = SKTransition.moveIn(with: .down, duration: 0.5)
@@ -79,6 +81,7 @@ class HowToPlayScene: SKScene {
             
             if (!backButton.frame.contains(t.location(in: self))) {
                 backButton.texture = SKTexture(imageNamed: "back")
+                touchStartLoc = CGRect(x: 0, y: 0, width: 0, height: 0)
                 return;
             }
         }
