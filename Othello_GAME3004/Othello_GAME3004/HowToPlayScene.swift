@@ -45,12 +45,12 @@ class HowToPlayScene: SKScene {
         
         instructionsLabel = SKLabelNode(text: "Objective of the Game: \nTo have the most discs on the board\nwhen the game ends. \n\nHow to Play: \nEach player take turns to place down \none disc on the board. The player's \ndisc must be placed beside the \nopposing player's disc to make a line \nwhere the last disc is the player's disc.")
         instructionsLabel.numberOfLines = 0
-        instructionsLabel.horizontalAlignmentMode = .center
+        instructionsLabel.horizontalAlignmentMode = .left
         instructionsLabel.preferredMaxLayoutWidth = 500
         instructionsLabel.lineBreakMode = NSLineBreakMode.byCharWrapping
         instructionsLabel.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height * 4/10)
         instructionsLabel.fontSize = UIScreen.main.bounds.width/18
-        //addChild(instructionsLabel)
+        addChild(instructionsLabel)
     }
     
     required init?(coder aDecoder: NSCoder) {

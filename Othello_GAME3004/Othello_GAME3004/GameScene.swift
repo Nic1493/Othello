@@ -45,6 +45,14 @@ class GameScene: SKScene {
     var whiteCount = 2;
     var blackCount = 2;
 	
+    //score labels
+    var blackTitleLabel: SKLabelNode!
+    var whiteTitleLabel: SKLabelNode!
+    var blackCountLabel: SKLabelNode!
+    var whiteCountLabel: SKLabelNode!
+    
+    var playerTurnLabel: SKLabelNode!
+    
     //endregion
     
     override init(size: CGSize) {
@@ -77,6 +85,40 @@ class GameScene: SKScene {
         board.zPosition = -1
         board.setScale(UIScreen.main.bounds.width / (UIScreen.main.bounds.width * 2))
         board.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2)
+        
+        blackTitleLabel = SKLabelNode(text: "Black")
+        blackTitleLabel.position = CGPoint(x: UIScreen.main.bounds.width * 3/4, y: (board.frame.maxY + UIScreen.main.bounds.height) / 2 +  blackTitleLabel.frame.height/2)
+        blackTitleLabel.fontSize = UIScreen.main.bounds.width/10
+        blackTitleLabel.horizontalAlignmentMode = .center
+        blackTitleLabel.numberOfLines = 0
+        addChild(blackTitleLabel)
+        
+        blackCountLabel = SKLabelNode(text: "\(blackCount)")
+        blackCountLabel.position = CGPoint(x: UIScreen.main.bounds.width * 3/4, y: ((board.frame.maxY + UIScreen.main.bounds.height) / 2) - blackCountLabel.frame.height)
+        blackCountLabel.fontSize = UIScreen.main.bounds.width/10
+        blackCountLabel.horizontalAlignmentMode = .center
+        blackCountLabel.numberOfLines = 0
+        addChild(blackCountLabel)
+        
+        whiteTitleLabel = SKLabelNode(text: "White")
+        whiteTitleLabel.position = CGPoint(x: UIScreen.main.bounds.width * 1/4, y: (board.frame.maxY + UIScreen.main.bounds.height) / 2 +  whiteTitleLabel.frame.height/2)
+        whiteTitleLabel.fontSize = UIScreen.main.bounds.width/10
+        whiteTitleLabel.horizontalAlignmentMode = .center
+        whiteTitleLabel.numberOfLines = 0
+        addChild(whiteTitleLabel)
+        
+        whiteCountLabel = SKLabelNode(text: "\(whiteCount)")
+        whiteCountLabel.position = CGPoint(x: UIScreen.main.bounds.width * 1/4, y: ((board.frame.maxY + UIScreen.main.bounds.height) / 2) - whiteCountLabel.frame.height)
+        whiteCountLabel.fontSize = UIScreen.main.bounds.width/10
+        whiteCountLabel.horizontalAlignmentMode = .center
+        whiteCountLabel.numberOfLines = 0
+        addChild(whiteCountLabel)
+        
+        playerTurnLabel = SKLabelNode(text: "Black's Turn")
+        playerTurnLabel.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: board.frame.minY / 2)
+        playerTurnLabel.fontSize = UIScreen.main.bounds.width/10
+        playerTurnLabel.horizontalAlignmentMode = .center
+        addChild(playerTurnLabel)
         
         blackDisc = SKSpriteNode(texture: SKTexture(imageNamed: "black0"))
         addChild(blackDisc)
@@ -127,6 +169,7 @@ class GameScene: SKScene {
             newBlackDisc.position.x += board.frame.minX + CGFloat(c) * 2
             newBlackDisc.position.y -= CGFloat(r) * 2
         }
+        
         if colour == white
         {
             let newWhiteDisc = whiteDisc.copy() as! SKSpriteNode
@@ -136,7 +179,6 @@ class GameScene: SKScene {
             newWhiteDisc.position = CGPoint(x: board.frame.width * (CGFloat(c) / 8) * greenRatio, y: board.frame.maxY - board.frame.height * (CGFloat(r) / 8) * greenRatio)
             newWhiteDisc.position.x += board.frame.minX + CGFloat(c) * 2
             newWhiteDisc.position.y -= CGFloat(r) * 2
-            
         }
     }
 	
@@ -333,6 +375,7 @@ class GameScene: SKScene {
         for t in touches {
             if pauseButton.frame.contains(t.location(in: self)) {
                 pauseButton.texture = SKTexture(imageNamed: "back-pressed")
+                PlaySound(url: sfxClickDown)
                 touchStartLoc = pauseButton.frame
             }
             
@@ -349,32 +392,13 @@ class GameScene: SKScene {
             clickParticle = SKEmitterNode(fileNamed: "ClickParticle.sks")
             clickParticle.position = t.location(in: self)
             scene?.addChild(clickParticle)
+            print(touchStartLoc)
             
-            if (!IsGameOver()) {
-                if board.frame.contains(t.location(in: self)) {
-                    let row: Int = Int(floor((board.frame.maxY - t.location(in: self).y) / (board.frame.height / 8)))
-                    let col: Int = Int(floor((t.location(in: self).x - board.frame.minX) / (board.frame.width / 8)))
-                    if IsValidMove(colour: currentTurn, r: row, c: col) {
-                    PlaceDisc(colour: currentTurn, r: row, c: col)
-                    }
-                }
-            }
             if (pauseButton.frame.contains(t.location(in: self)) && touchStartLoc!.equalTo(pauseButton.frame)) {
                 let scene = MainMenuScene(size: self.size)
                 let transition = SKTransition.doorsCloseHorizontal(withDuration: 0.5)
                 self.view?.presentScene(scene, transition:transition)
-            }
-            
-            if (!pauseButton.frame.contains(t.location(in: self))) {
-                pauseButton.texture = SKTexture(imageNamed: "back")
-                touchStartLoc = CGRect(x: 0, y: 0, width: 0, height: 0)
-                return;
-            }
-            
-            if board.frame.contains(t.location(in: self)) {
-                let row: Int = Int(floor((board.frame.maxY - t.location(in: self).y) / (board.frame.height / 8)))
-                let col: Int = Int(floor((t.location(in: self).x - board.frame.minX) / (board.frame.width / 8)))
-                DrawDisc(colour: black, r: row, c: col)
+                PlaySound(url: sfxClickUp)
             }
             
             if (soundButton.frame.contains(t.location(in: self)) && touchStartLoc!.equalTo(soundButton.frame)) {
@@ -391,13 +415,31 @@ class GameScene: SKScene {
                 }
             }
             
-            if (!soundButton.frame.contains(t.location(in: self))){
+            if (!pauseButton.frame.contains(t.location(in: self)) ||
+                !soundButton.frame.contains(t.location(in: self))) {
+                pauseButton.texture = SKTexture(imageNamed: "back")
                 
                 soundButton.texture = SKTexture(imageNamed: isSoundOn ? "soundon" : "soundoff")
-                
                 touchStartLoc = CGRect(x: 0, y: 0, width: 0, height: 0)
                 return;
             }
+            
+            if (!IsGameOver()) {
+                if board.frame.contains(t.location(in: self)) {
+                    let row: Int = Int(floor((board.frame.maxY - t.location(in: self).y) / (board.frame.height / 8)))
+                    let col: Int = Int(floor((t.location(in: self).x - board.frame.minX) / (board.frame.width / 8)))
+                    if IsValidMove(colour: currentTurn, r: row, c: col) {
+                        PlaceDisc(colour: currentTurn, r: row, c: col)
+                    }
+                }
+            }
+            
+            if board.frame.contains(t.location(in: self)) {
+                let row: Int = Int(floor((board.frame.maxY - t.location(in: self).y) / (board.frame.height / 8)))
+                let col: Int = Int(floor((t.location(in: self).x - board.frame.minX) / (board.frame.width / 8)))
+                DrawDisc(colour: black, r: row, c: col)
+            }
+            
         }
     }
 }
