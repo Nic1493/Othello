@@ -12,25 +12,7 @@ import SpriteKit
 import GameplayKit
 
 class GameScene: SKScene {
-    
-    var pauseButton: SKSpriteNode!
-    var soundButton: SKSpriteNode!
-    var isSoundOn: Bool = true
-    
-    var board: SKSpriteNode!
-    let greenRatio: CGFloat = 73.0 / 80.0       //the percentage of the board sprite that is green
-    var blackDisc: SKSpriteNode!
-    var whiteDisc: SKSpriteNode!
-    var background: SKSpriteNode!
-    var clickParticle: SKEmitterNode!
-    var touchStartLoc: CGRect!
-    
-    var audioPlayer = AVAudioPlayer()
-    var sfxClickDown: URL!
-    var sfxClickUp: URL!
-    
-	//region INTERNALS
-	
+    // MARK: Internals
     //define board size, create game board
     let boardSize = 8;
     var gameBoard: [[Character]]!;
@@ -40,12 +22,28 @@ class GameScene: SKScene {
     let white: Character = "w";
     let empty: Character = "e";
     var currentTurn: Character = " ";
-	
+    
     //amount of discs on the board
     var whiteCount = 2;
     var blackCount = 2;
-	
-    //endregion
+    
+    // MARK: Scene display
+    var sGameBoard: [[SKSpriteNode]]!
+    var board: SKSpriteNode!
+    let greenRatio: CGFloat = 73.0 / 80.0       //the percentage of the board sprite that is green
+    var blackDisc: SKSpriteNode!
+    var whiteDisc: SKSpriteNode!
+    var background: SKSpriteNode!
+    var clickParticle: SKEmitterNode!
+    var touchStartLoc: CGRect!
+    
+    var pauseButton: SKSpriteNode!
+    var soundButton: SKSpriteNode!
+    
+    var isSoundOn: Bool = true
+    var audioPlayer = AVAudioPlayer()
+    var sfxClickDown: URL!
+    var sfxClickUp: URL!
     
     override init(size: CGSize) {
         super.init(size: size)
@@ -66,8 +64,8 @@ class GameScene: SKScene {
         soundButton = SKSpriteNode(texture: SKTexture(imageNamed: "soundon"))
         addChild(soundButton)
         soundButton.anchorPoint = CGPoint(x: 1, y: 0)
-        soundButton.position = CGPoint(x: (UIScreen.main.bounds.width / 0.9) - (UIScreen.main.bounds.width * 0.15), y: UIScreen.main.bounds.height * 0.5/10)
         soundButton.setScale((UIScreen.main.bounds.width / soundButton.frame.width) * 0.18)
+        soundButton.position = CGPoint(x: UIScreen.main.bounds.width * 0.95, y: UIScreen.main.bounds.width * 0.05)
         
         sfxClickDown = Bundle.main.url(forResource: "button-click-down", withExtension: "mp3", subdirectory: "Sounds")
         sfxClickUp = Bundle.main.url(forResource: "button-click-up", withExtension: "mp3", subdirectory: "Sounds")
@@ -80,11 +78,11 @@ class GameScene: SKScene {
         
         blackDisc = SKSpriteNode(texture: SKTexture(imageNamed: "black0"))
         addChild(blackDisc)
-        blackDisc.position = CGPoint(x: -100, y: -100)                      //spawn off-screen. only used for cloning during runtime
+        blackDisc.position = CGPoint(x: -100, y: -100)                  //spawn off-screen. only used for cloning during runtime
         
         whiteDisc = SKSpriteNode(texture: SKTexture(imageNamed: "white0"))
         addChild(whiteDisc)
-        whiteDisc.position = CGPoint(x: -100, y: -100)                      //same as above
+        whiteDisc.position = CGPoint(x: -100, y: -100)                  //same as above
         
         InitGameState()
         currentTurn = black;
@@ -93,15 +91,16 @@ class GameScene: SKScene {
     //sets starting game state internally, draws the starting 4 discs on screen
     func InitGameState(){
         gameBoard = [[Character]](repeating: [Character](repeating: " ", count: boardSize), count: boardSize);
+        sGameBoard = [[SKSpriteNode]](repeating: [SKSpriteNode](repeating: SKSpriteNode(texture: SKTexture(imageNamed: "white0")).copy() as! SKSpriteNode, count: boardSize), count: boardSize)
         
         for i in 0..<boardSize
         {
             for j in 0..<boardSize
             {
                 gameBoard[i][j] = empty;
+                //addChild(<#T##node: SKNode##SKNode#>)
             }
-        }
-        
+        }        
         
         gameBoard[3][3] = white;
         gameBoard[3][4] = black;
@@ -114,8 +113,20 @@ class GameScene: SKScene {
         DrawDisc(colour: white, r: 4, c: 4);
     }
     
-    //renders <colour> disc at position [r, c] on the game board
     func DrawDisc(colour: Character, r: Int, c: Int) {
+        if (colour == black) { sGameBoard[r][c].texture = SKTexture(imageNamed: "black0"); }
+        else if (colour == white) { sGameBoard[r][c].texture = SKTexture(imageNamed: "white0"); }
+        
+        addChild(sGameBoard[r][c]);
+        sGameBoard[r][c].anchorPoint = CGPoint(x: -greenRatio / 2, y: 1 + greenRatio / 2);
+        sGameBoard[r][c].setScale(greenRatio * board.xScale);
+        sGameBoard[r][c].position = CGPoint(x: board.frame.width * (CGFloat(c) / 8) * greenRatio, y: board.frame.maxY - board.frame.height * (CGFloat(r) / 8) * greenRatio);
+        sGameBoard[r][c].position.x += board.frame.minX + CGFloat(c) * 2;
+        sGameBoard[r][c].position.y -= CGFloat(r) * 2;
+    }
+    
+    //renders <colour> disc at position [r, c] on the game board
+    /*func DrawDisc(colour: Character, r: Int, c: Int) {
 
         if colour == black
         {
@@ -138,7 +149,7 @@ class GameScene: SKScene {
             newWhiteDisc.position.y -= CGFloat(r) * 2
             
         }
-    }
+    }*/
 	
 	func IsValidMove(colour: Character, r: Int, c: Int) -> Bool {
 		var opponent: Character = empty;
@@ -269,6 +280,7 @@ class GameScene: SKScene {
 	func PlaceDisc(colour: Character, r: Int, c: Int) {
 		gameBoard[r][c] = colour
 		DrawDisc(colour: colour, r: r, c: c)
+        
 		for i in stride(from: 0, to:Double.pi * 2, by:Double.pi / 4)
 		{			
 			FlipDiscs(colour: colour, r: r, c: c, yDelta: Int(round(sin(i))), xDelta: Int(round(sin(i + Double.pi / 2))));
@@ -303,7 +315,6 @@ class GameScene: SKScene {
 			}
 		}
 	}
-	
 	
 	func IsGameOver() -> Bool {
 		return blackCount + whiteCount >= boardSize * boardSize;
@@ -355,10 +366,13 @@ class GameScene: SKScene {
                     let row: Int = Int(floor((board.frame.maxY - t.location(in: self).y) / (board.frame.height / 8)))
                     let col: Int = Int(floor((t.location(in: self).x - board.frame.minX) / (board.frame.width / 8)))
                     if IsValidMove(colour: currentTurn, r: row, c: col) {
-                    PlaceDisc(colour: currentTurn, r: row, c: col)
+                        PlaceDisc(colour: currentTurn, r: row, c: col)
+                        if currentTurn == black { currentTurn = white }
+                        else if currentTurn == white { currentTurn = black }
                     }
                 }
             }
+            
             if (pauseButton.frame.contains(t.location(in: self)) && touchStartLoc!.equalTo(pauseButton.frame)) {
                 let scene = MainMenuScene(size: self.size)
                 let transition = SKTransition.doorsCloseHorizontal(withDuration: 0.5)
@@ -369,12 +383,6 @@ class GameScene: SKScene {
                 pauseButton.texture = SKTexture(imageNamed: "back")
                 touchStartLoc = CGRect(x: 0, y: 0, width: 0, height: 0)
                 return;
-            }
-            
-            if board.frame.contains(t.location(in: self)) {
-                let row: Int = Int(floor((board.frame.maxY - t.location(in: self).y) / (board.frame.height / 8)))
-                let col: Int = Int(floor((t.location(in: self).x - board.frame.minX) / (board.frame.width / 8)))
-                DrawDisc(colour: black, r: row, c: col)
             }
             
             if (soundButton.frame.contains(t.location(in: self)) && touchStartLoc!.equalTo(soundButton.frame)) {
@@ -392,9 +400,7 @@ class GameScene: SKScene {
             }
             
             if (!soundButton.frame.contains(t.location(in: self))){
-                
-                soundButton.texture = SKTexture(imageNamed: isSoundOn ? "soundon" : "soundoff")
-                
+                soundButton.texture = SKTexture(imageNamed: isSoundOn ? "soundon" : "soundoff")                
                 touchStartLoc = CGRect(x: 0, y: 0, width: 0, height: 0)
                 return;
             }
