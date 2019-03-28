@@ -6,6 +6,7 @@
 //  Copyright © 2019 Codex. All rights reserved.
 //
 
+import Foundation
 import AVFoundation
 import SpriteKit
 import GameplayKit
@@ -13,6 +14,8 @@ import GameplayKit
 class GameScene: SKScene {
     
     var pauseButton: SKSpriteNode!
+    var soundButton: SKSpriteNode!
+    var isSoundOn: Bool = true
     
     var board: SKSpriteNode!
     let greenRatio: CGFloat = 73.0 / 80.0       //the percentage of the board sprite that is green
@@ -21,6 +24,10 @@ class GameScene: SKScene {
     var background: SKSpriteNode!
     var clickParticle: SKEmitterNode!
     var touchStartLoc: CGRect!
+    
+    var audioPlayer = AVAudioPlayer()
+    var sfxClickDown: URL!
+    var sfxClickUp: URL!
     
 	//region INTERNALS
 	
@@ -56,6 +63,15 @@ class GameScene: SKScene {
         pauseButton.setScale((UIScreen.main.bounds.width / pauseButton.frame.width) * 0.18)
         pauseButton.position = CGPoint(x: UIScreen.main.bounds.width * 0.05, y: UIScreen.main.bounds.width * 0.05)
         
+        soundButton = SKSpriteNode(texture: SKTexture(imageNamed: "soundon"))
+        addChild(soundButton)
+        soundButton.anchorPoint = CGPoint(x: 1, y: 0)
+        soundButton.position = CGPoint(x: (UIScreen.main.bounds.width / 0.9) - (UIScreen.main.bounds.width * 0.15), y: UIScreen.main.bounds.height * 0.5/10)
+        soundButton.setScale((UIScreen.main.bounds.width / soundButton.frame.width) * 0.18)
+        
+        sfxClickDown = Bundle.main.url(forResource: "button-click-down", withExtension: "mp3", subdirectory: "Sounds")
+        sfxClickUp = Bundle.main.url(forResource: "button-click-up", withExtension: "mp3", subdirectory: "Sounds")
+        
         board = SKSpriteNode(texture: SKTexture(imageNamed: "board"))
         addChild(board)
         board.zPosition = -1
@@ -85,6 +101,7 @@ class GameScene: SKScene {
                 gameBoard[i][j] = empty;
             }
         }
+        
         
         gameBoard[3][3] = white;
         gameBoard[3][4] = black;
@@ -301,11 +318,28 @@ class GameScene: SKScene {
         
     }
     
+    func PlaySound(url: URL) {
+        do {
+            audioPlayer = try AVAudioPlayer(contentsOf: url)
+            if isSoundOn {
+                audioPlayer.play()
+            }
+        } catch {
+            print("Couldn't play file!")
+        }
+    }
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         for t in touches {
             if pauseButton.frame.contains(t.location(in: self)) {
                 pauseButton.texture = SKTexture(imageNamed: "back-pressed")
                 touchStartLoc = pauseButton.frame
+            }
+            
+            if (soundButton.frame.contains(t.location(in: self))) {
+                soundButton.texture = SKTexture(imageNamed: isSoundOn ? "soundon-pressed" : "soundoff-pressed")
+                PlaySound(url: sfxClickDown)
+                touchStartLoc = soundButton.frame
             }
         }
     }
@@ -341,6 +375,28 @@ class GameScene: SKScene {
                 let row: Int = Int(floor((board.frame.maxY - t.location(in: self).y) / (board.frame.height / 8)))
                 let col: Int = Int(floor((t.location(in: self).x - board.frame.minX) / (board.frame.width / 8)))
                 DrawDisc(colour: black, r: row, c: col)
+            }
+            
+            if (soundButton.frame.contains(t.location(in: self)) && touchStartLoc!.equalTo(soundButton.frame)) {
+                if (isSoundOn) {
+                    soundButton.texture = SKTexture(imageNamed: "soundoff")
+                    isSoundOn = false;
+                    //no need to play sound here
+                }
+                else
+                {
+                    soundButton.texture = SKTexture(imageNamed: "soundon")
+                    isSoundOn = true
+                    PlaySound(url: sfxClickUp)
+                }
+            }
+            
+            if (!soundButton.frame.contains(t.location(in: self))){
+                
+                soundButton.texture = SKTexture(imageNamed: isSoundOn ? "soundon" : "soundoff")
+                
+                touchStartLoc = CGRect(x: 0, y: 0, width: 0, height: 0)
+                return;
             }
         }
     }

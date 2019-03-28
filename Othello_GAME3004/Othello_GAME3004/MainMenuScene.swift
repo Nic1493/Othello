@@ -42,15 +42,16 @@ class MainMenuScene: SKScene {
         title?.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height * 0.8)
         title.setScale((UIScreen.main.bounds.width / title.frame.width) * 0.6)
         
-        quitButton = SKSpriteNode(texture: SKTexture(imageNamed: "quit"))
-        addChild(quitButton)
-        quitButton.position = CGPoint(x: (UIScreen.main.bounds.width / 2) + (UIScreen.main.bounds.width * 0.15), y: UIScreen.main.bounds.height * 3/10)
-        quitButton.setScale((UIScreen.main.bounds.width / quitButton.frame.width) * 0.3)
+        //quitButton = SKSpriteNode(texture: SKTexture(imageNamed: "quit"))
+        //addChild(quitButton)
+        //quitButton.position = CGPoint(x: (UIScreen.main.bounds.width / 2) + (UIScreen.main.bounds.width * 0.15), y: UIScreen.main.bounds.height * 3/10)
+       // quitButton.setScale((UIScreen.main.bounds.width / quitButton.frame.width) * 0.3)
         
         soundButton = SKSpriteNode(texture: SKTexture(imageNamed: "soundon"))
         addChild(soundButton)
-        soundButton.position = CGPoint(x: (UIScreen.main.bounds.width / 2) - (UIScreen.main.bounds.width * 0.15), y: UIScreen.main.bounds.height * 3/10)
-        soundButton.setScale((UIScreen.main.bounds.width / soundButton.frame.width) * 0.3)
+        soundButton.anchorPoint = CGPoint(x: 1, y: 0)
+        soundButton.position = CGPoint(x: (UIScreen.main.bounds.width / 0.9) - (UIScreen.main.bounds.width * 0.15), y: UIScreen.main.bounds.height * 0.5/10)
+        soundButton.setScale((UIScreen.main.bounds.width / soundButton.frame.width) * 0.18)
     
         howToPlayButton = SKSpriteNode(texture: SKTexture(imageNamed: "howtoplay"))
         addChild(howToPlayButton)
@@ -114,11 +115,11 @@ class MainMenuScene: SKScene {
                 touchStartLoc = soundButton.frame
             }
             
-            if (quitButton.frame.contains(t.location(in: self))) {
-                quitButton.texture = SKTexture(imageNamed: "quit-pressed")
-                PlaySound(url: sfxClickDown)
-                touchStartLoc = quitButton.frame
-            }
+          //  if (quitButton.frame.contains(t.location(in: self))) {
+             //   quitButton.texture = SKTexture(imageNamed: "quit-pressed")
+             //   PlaySound(url: sfxClickDown)
+              //  touchStartLoc = quitButton.frame
+           // }
         }
     }
     
@@ -167,21 +168,21 @@ class MainMenuScene: SKScene {
                 }
             }
             
-            if (quitButton.frame.contains(t.location(in: self)) &&
-                touchStartLoc!.equalTo(quitButton.frame)) {
-                exit(0)
-            }
+           // if (quitButton.frame.contains(t.location(in: self)) &&
+            //    touchStartLoc!.equalTo(quitButton.frame)) {
+             //   exit(0)
+           // }
             
             if (!P1Button.frame.contains(t.location(in: self)) ||
                 !P2Button.frame.contains(t.location(in: self)) ||
                 !howToPlayButton.frame.contains(t.location(in: self)) ||
                 !soundButton.frame.contains(t.location(in: self)) ||
-                !quitButton.frame.contains(t.location(in: self))) {
+                !quitButton.frame.contains(t.location(in: self))){
                 
                 P1Button.texture = SKTexture(imageNamed: "1P")
                 P2Button.texture = SKTexture(imageNamed: "2P")
                 howToPlayButton.texture = SKTexture(imageNamed: "howtoplay")
-                quitButton.texture = SKTexture(imageNamed: "quit")
+              //  quitButton.texture = SKTexture(imageNamed: "quit")
                 soundButton.texture = SKTexture(imageNamed: isSoundOn ? "soundon" : "soundoff")
                 
                 touchStartLoc = CGRect(x: 0, y: 0, width: 0, height: 0)
