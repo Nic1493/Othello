@@ -28,7 +28,6 @@ class GameScene: SKScene {
     var blackCount = 2;
     
     // MARK: Scene display
-    var sGameBoard: [[SKSpriteNode]]!
     var board: SKSpriteNode!
     let greenRatio: CGFloat = 73.0 / 80.0       //the percentage of the board sprite that is green
     var blackDisc: SKSpriteNode!
@@ -36,11 +35,11 @@ class GameScene: SKScene {
     var background: SKSpriteNode!
     var clickParticle: SKEmitterNode!
     var touchStartLoc: CGRect!
+    
     var blackTitleLabel: SKLabelNode!
     var whiteTitleLabel: SKLabelNode!
     var blackCountLabel: SKLabelNode!
     var whiteCountLabel: SKLabelNode!
-    
     var playerTurnLabel: SKLabelNode!
     
     var pauseButton: SKSpriteNode!
@@ -128,17 +127,15 @@ class GameScene: SKScene {
         currentTurn = black;
     }
     
-    //sets starting game state internally, draws the starting 4 discs on screen
+    //sets starting game state
     func InitGameState(){
-        gameBoard = [[Character]](repeating: [Character](repeating: " ", count: boardSize), count: boardSize);
-        sGameBoard = [[SKSpriteNode]](repeating: [SKSpriteNode](repeating: SKSpriteNode(texture: SKTexture(imageNamed: "white0")).copy() as! SKSpriteNode, count: boardSize), count: boardSize)
-        
+        gameBoard = [[Character]](repeating: [Character](repeating: " ", count: boardSize), count: boardSize)
+                
         for i in 0..<boardSize
         {
             for j in 0..<boardSize
             {
                 gameBoard[i][j] = empty;
-                //addChild(<#T##node: SKNode##SKNode#>)
             }
         }        
         
@@ -153,41 +150,33 @@ class GameScene: SKScene {
         DrawDisc(colour: white, r: 4, c: 4);
     }
     
-    /*func DrawDisc(colour: Character, r: Int, c: Int) {
-        if (colour == black) { sGameBoard[r][c].texture = SKTexture(imageNamed: "black0"); }
-        else if (colour == white) { sGameBoard[r][c].texture = SKTexture(imageNamed: "white0"); }
-        
-        addChild(sGameBoard[r][c]);
-        sGameBoard[r][c].anchorPoint = CGPoint(x: -greenRatio / 2, y: 1 + greenRatio / 2);
-        sGameBoard[r][c].setScale(greenRatio * board.xScale);
-        sGameBoard[r][c].position = CGPoint(x: board.frame.width * (CGFloat(c) / 8) * greenRatio, y: board.frame.maxY - board.frame.height * (CGFloat(r) / 8) * greenRatio);
-        sGameBoard[r][c].position.x += board.frame.minX + CGFloat(c) * 2;
-        sGameBoard[r][c].position.y -= CGFloat(r) * 2;
-    }*/
-    
     //renders <colour> disc at position [r, c] on the game board
     func DrawDisc(colour: Character, r: Int, c: Int) {
 
         if colour == black
         {
             let newBlackDisc = blackDisc.copy() as! SKSpriteNode
-            addChild(newBlackDisc)
+            newBlackDisc.name = "disc\(r)\(c)"
             newBlackDisc.anchorPoint = CGPoint(x: -greenRatio / 2, y: 1 + greenRatio / 2)
             newBlackDisc.setScale(greenRatio * board.xScale)
             newBlackDisc.position = CGPoint(x: board.frame.width * (CGFloat(c) / 8) * greenRatio, y: board.frame.maxY - board.frame.height * (CGFloat(r) / 8) * greenRatio)
             newBlackDisc.position.x += board.frame.minX + CGFloat(c) * 2
             newBlackDisc.position.y -= CGFloat(r) * 2
+            addChild(newBlackDisc)
+            print("created \(newBlackDisc.name!) at \(newBlackDisc.position)")
         }
         
         if colour == white
         {
             let newWhiteDisc = whiteDisc.copy() as! SKSpriteNode
-            addChild(newWhiteDisc)
+            newWhiteDisc.name = "disc\(r)\(c)"
             newWhiteDisc.anchorPoint = CGPoint(x: -greenRatio / 2, y: 1 + greenRatio / 2)
             newWhiteDisc.setScale(greenRatio * board.xScale)
             newWhiteDisc.position = CGPoint(x: board.frame.width * (CGFloat(c) / 8) * greenRatio, y: board.frame.maxY - board.frame.height * (CGFloat(r) / 8) * greenRatio)
             newWhiteDisc.position.x += board.frame.minX + CGFloat(c) * 2
             newWhiteDisc.position.y -= CGFloat(r) * 2
+            addChild(newWhiteDisc)
+            print("created \(newWhiteDisc.name!) at \(newWhiteDisc.position)")
         }
     }
 	
@@ -332,6 +321,7 @@ class GameScene: SKScene {
 		var nextRow: Int = r + yDelta;
 		var nextCol: Int = c + xDelta;
 		
+        //holy motherfu-- what is this abomination
 		if nextRow < boardSize, nextRow > -1, nextCol < boardSize, nextCol > -1
 		{
 			while gameBoard[nextRow][nextCol] != empty
@@ -340,8 +330,12 @@ class GameScene: SKScene {
 				{
 					while !(r == nextRow && c == nextCol)
 					{
-						gameBoard[nextRow][nextCol] = colour;
-						//animate discs here
+                        if gameBoard[nextRow][nextCol] != colour {
+                            gameBoard[nextRow][nextCol] = colour;
+                            //replace redraws with animation later
+                            childNode(withName: "disc\(nextRow)\(nextCol)")?.removeFromParent()
+                            DrawDisc(colour: colour, r: nextRow, c: nextCol)
+                        }
 						nextRow -= yDelta;
 						nextCol -= xDelta;
 					}
@@ -479,13 +473,6 @@ class GameScene: SKScene {
                     }
                 }
             }
-            
-            if board.frame.contains(t.location(in: self)) {
-                let row: Int = Int(floor((board.frame.maxY - t.location(in: self).y) / (board.frame.height / 8)))
-                let col: Int = Int(floor((t.location(in: self).x - board.frame.minX) / (board.frame.width / 8)))
-                DrawDisc(colour: black, r: row, c: col)
-            }
-            
         }
     }
 }
