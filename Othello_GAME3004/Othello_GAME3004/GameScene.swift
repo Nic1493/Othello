@@ -36,6 +36,12 @@ class GameScene: SKScene {
     var background: SKSpriteNode!
     var clickParticle: SKEmitterNode!
     var touchStartLoc: CGRect!
+    var blackTitleLabel: SKLabelNode!
+    var whiteTitleLabel: SKLabelNode!
+    var blackCountLabel: SKLabelNode!
+    var whiteCountLabel: SKLabelNode!
+    
+    var playerTurnLabel: SKLabelNode!
     
     var pauseButton: SKSpriteNode!
     var soundButton: SKSpriteNode!
@@ -104,7 +110,7 @@ class GameScene: SKScene {
         whiteCountLabel.numberOfLines = 0
         addChild(whiteCountLabel)
         
-        playerTurnLabel = SKLabelNode(text: "Black's Turn")
+        playerTurnLabel = SKLabelNode(text: "Black's turn.")
         playerTurnLabel.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: board.frame.minY / 2)
         playerTurnLabel.fontSize = UIScreen.main.bounds.width/10
         playerTurnLabel.horizontalAlignmentMode = .center
@@ -147,7 +153,7 @@ class GameScene: SKScene {
         DrawDisc(colour: white, r: 4, c: 4);
     }
     
-    func DrawDisc(colour: Character, r: Int, c: Int) {
+    /*func DrawDisc(colour: Character, r: Int, c: Int) {
         if (colour == black) { sGameBoard[r][c].texture = SKTexture(imageNamed: "black0"); }
         else if (colour == white) { sGameBoard[r][c].texture = SKTexture(imageNamed: "white0"); }
         
@@ -157,10 +163,10 @@ class GameScene: SKScene {
         sGameBoard[r][c].position = CGPoint(x: board.frame.width * (CGFloat(c) / 8) * greenRatio, y: board.frame.maxY - board.frame.height * (CGFloat(r) / 8) * greenRatio);
         sGameBoard[r][c].position.x += board.frame.minX + CGFloat(c) * 2;
         sGameBoard[r][c].position.y -= CGFloat(r) * 2;
-    }
+    }*/
     
     //renders <colour> disc at position [r, c] on the game board
-    /*func DrawDisc(colour: Character, r: Int, c: Int) {
+    func DrawDisc(colour: Character, r: Int, c: Int) {
 
         if colour == black
         {
@@ -183,7 +189,7 @@ class GameScene: SKScene {
             newWhiteDisc.position.x += board.frame.minX + CGFloat(c) * 2
             newWhiteDisc.position.y -= CGFloat(r) * 2
         }
-    }*/
+    }
 	
 	func IsValidMove(colour: Character, r: Int, c: Int) -> Bool {
 		var opponent: Character = empty;
@@ -350,17 +356,38 @@ class GameScene: SKScene {
 		}
 	}
 	
-	func IsGameOver() -> Bool {
-		return blackCount + whiteCount >= boardSize * boardSize;
-	}
-	
     required init?(coder aDecoder: NSCoder) {
         fatalError("Init(coder: ) has not been implemented")
     }
     
+	func IsGameOver() -> Bool {
+		return blackCount + whiteCount >= boardSize * boardSize;
+    }
+    
+    func GetDiscCount(colour: Character) -> Int{
+        var discCount: Int = 0
+        
+        for i in 0..<boardSize {
+            for j in 0..<boardSize {
+                if gameBoard[i][j] == colour {
+                    discCount += 1
+                }
+            }
+        }
+        
+        return discCount
+    }
+    
     // Called before each frame is rendered
     override func update(_ currentTime: TimeInterval) {
+        blackCount = GetDiscCount(colour: black)
+        whiteCount = GetDiscCount(colour: white)
+        blackCountLabel.text = "\(blackCount)"
+        whiteCountLabel.text = "\(whiteCount)"
         
+        if IsGameOver() {
+            playerTurnLabel.text = (blackCount > whiteCount ? "Black wins!" : (blackCount == whiteCount ? "Tie game!" : "White wins!"))
+        }
     }
     
     func PlaySound(url: URL) {
@@ -395,7 +422,6 @@ class GameScene: SKScene {
             clickParticle = SKEmitterNode(fileNamed: "ClickParticle.sks")
             clickParticle.position = t.location(in: self)
             scene?.addChild(clickParticle)
-            print(touchStartLoc)
 			
             if (!IsGameOver()) {
                 if board.frame.contains(t.location(in: self)) {
@@ -403,8 +429,14 @@ class GameScene: SKScene {
                     let col: Int = Int(floor((t.location(in: self).x - board.frame.minX) / (board.frame.width / 8)))
                     if IsValidMove(colour: currentTurn, r: row, c: col) {
                         PlaceDisc(colour: currentTurn, r: row, c: col)
-                        if currentTurn == black { currentTurn = white }
-                        else if currentTurn == white { currentTurn = black }
+                        if currentTurn == black {
+                            currentTurn = white
+                            playerTurnLabel.text = "White's turn."
+                        }
+                        else if currentTurn == white {
+                            currentTurn = black
+                            playerTurnLabel.text = "Black's turn."
+                        }
                     }
                 }
             }
