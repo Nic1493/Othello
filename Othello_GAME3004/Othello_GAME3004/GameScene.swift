@@ -47,6 +47,7 @@ class GameScene: SKScene {
     //animations
     var blackToWhiteAnim: SKAction!
     var whiteToBlackAnim: SKAction!
+    let animTimePerFrame: Double = 0.05
     
     //buttons
     var pauseButton: SKSpriteNode!
@@ -139,8 +140,8 @@ class GameScene: SKScene {
         }
         btwFrames.append(whiteDisc.texture!)
         wtbFrames.append(blackDisc.texture!)
-        blackToWhiteAnim = SKAction.animate(with: btwFrames, timePerFrame: 0.1)
-        whiteToBlackAnim = SKAction.animate(with: wtbFrames, timePerFrame: 0.1)
+        blackToWhiteAnim = SKAction.animate(with: btwFrames, timePerFrame: animTimePerFrame)
+        whiteToBlackAnim = SKAction.animate(with: wtbFrames, timePerFrame: animTimePerFrame)
         
         InitGameState()
         currentTurn = black;
@@ -182,7 +183,6 @@ class GameScene: SKScene {
             newBlackDisc.position.x += board.frame.minX + CGFloat(c) * 2
             newBlackDisc.position.y -= CGFloat(r) * 2
             addChild(newBlackDisc)
-            print("\(newBlackDisc.xScale), \(newBlackDisc.yScale)")
         }
         
         if colour == white
