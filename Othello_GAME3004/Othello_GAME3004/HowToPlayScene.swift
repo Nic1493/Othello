@@ -11,13 +11,19 @@ import AVFoundation
 import SpriteKit
 
 class HowToPlayScene: SKScene {
-    var backButton: SKSpriteNode!
-    var placeHolderSprite: SKSpriteNode!
     var background: SKSpriteNode!
-    var titleLabel: SKLabelNode!
-    var instructionsLabel: SKLabelNode!
     var clickParticle: SKEmitterNode!
     var touchStartLoc: CGRect!
+    
+    var titleLabel: SKLabelNode!
+    var instructionsLabel: SKLabelNode!
+    
+    var backButton: SKSpriteNode!
+    
+    var soundOn: Bool = UserDefaults.standard.bool(forKey: "sound")
+    var audioPlayer = AVAudioPlayer()
+    let sfxClickDown: URL! = Bundle.main.url(forResource: "button-click-down", withExtension: "mp3", subdirectory: "Sounds")
+    let sfxClickUp: URL! = Bundle.main.url(forResource: "button-click-up", withExtension: "mp3", subdirectory: "Sounds")
     
     override init(size: CGSize) {
         super.init(size: size)
@@ -51,16 +57,27 @@ class HowToPlayScene: SKScene {
         instructionsLabel.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height * 4/10)
         instructionsLabel.fontSize = UIScreen.main.bounds.width/18
         addChild(instructionsLabel)
+        
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("Init(coder: ) has not been implemented")
     }
     
+    func PlaySound(url: URL) {
+        do {
+            audioPlayer = try AVAudioPlayer(contentsOf: url)
+            if soundOn { audioPlayer.play() }
+        } catch {
+            print("Couldn't play file!")
+        }
+    }
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         for t in touches {
             if (backButton.frame.contains(t.location(in: self))) {
                 backButton.texture = SKTexture(imageNamed: "back-pressed")
+                PlaySound(url: sfxClickDown)
                 touchStartLoc = backButton.frame
             }
         }
@@ -74,6 +91,7 @@ class HowToPlayScene: SKScene {
             
             if (backButton.frame.contains(t.location(in: self)) && touchStartLoc!.equalTo(backButton.frame)) {
                 backButton.texture = SKTexture(imageNamed: "back")
+                PlaySound(url: sfxClickUp)
                 let scene = MainMenuScene(size: self.size)
                 let transition = SKTransition.moveIn(with: .down, duration: 0.5)
                 self.view?.presentScene(scene, transition:transition)

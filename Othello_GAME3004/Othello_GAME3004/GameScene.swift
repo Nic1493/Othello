@@ -13,36 +13,41 @@ import GameplayKit
 
 class GameScene: SKScene {
     // MARK: Game logic vars
-    //define board size, create game board
-    let boardSize = 8;
-    var gameBoard: [[Character]]!;
+    //set board dimensions; internalize game board array
+    let boardSize = 8
+    var gameBoard: [[Character]]!
     
-    //tokens
-    let black: Character = "b";
-    let white: Character = "w";
-    let empty: Character = "e";
-    var currentTurn: Character = " ";
+    //character tokens for internal array handling
+    let black: Character = "b"
+    let white: Character = "w"
+    let empty: Character = "e"
+    var currentTurn: Character = " "
     
-    //amount of discs on the board
-    var whiteCount = 2;
-    var blackCount = 2;
+    //amount of discs on the board (game starts with 2 each on board)
+    var whiteCount = 2
+    var blackCount = 2
+    
+    //enable/disable AI
+    let singlePlayer: Bool = UserDefaults.standard.bool(forKey: "singlePlayer")
     
     // MARK: Scene display vars
+    //general
+    var background: SKSpriteNode!
+    var clickParticle: SKEmitterNode!
+    var touchStartLoc: CGRect!
+    
     //game
     var board: SKSpriteNode!
     let greenRatio: CGFloat = 73.0 / 80.0       //the percentage of the board sprite that is green
     var blackDisc: SKSpriteNode!
     var whiteDisc: SKSpriteNode!
-    var background: SKSpriteNode!
-    var clickParticle: SKEmitterNode!
-    var touchStartLoc: CGRect!
     
     //text display
-    var blackTitleLabel: SKLabelNode!
-    var whiteTitleLabel: SKLabelNode!
+    let playerTurnLabel: SKLabelNode! = SKLabelNode(text: "Black's turn.")
+    let blackTitleLabel: SKLabelNode! = SKLabelNode(text: "Black")
+    let whiteTitleLabel: SKLabelNode! = SKLabelNode(text: "White")
     var blackCountLabel: SKLabelNode!
     var whiteCountLabel: SKLabelNode!
-    var playerTurnLabel: SKLabelNode!
     
     //animations
     var blackToWhiteAnim: SKAction!
@@ -54,7 +59,7 @@ class GameScene: SKScene {
     var soundButton: SKSpriteNode!
     
     //audio
-    var isSoundOn: Bool = true
+    var soundOn: Bool = UserDefaults.standard.bool(forKey: "sound")
     var audioPlayer = AVAudioPlayer()
     var sfxClickDown: URL!
     var sfxClickUp: URL!
@@ -66,7 +71,7 @@ class GameScene: SKScene {
         background = SKSpriteNode(imageNamed: "menu-BG")
         background?.size = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
         background?.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2)
-        background?.zPosition = -2;
+        background?.zPosition = -2
         addChild(background)
         
         pauseButton = SKSpriteNode(texture: SKTexture(imageNamed: "back"))
@@ -75,7 +80,7 @@ class GameScene: SKScene {
         pauseButton.setScale((UIScreen.main.bounds.width / pauseButton.frame.width) * 0.18)
         pauseButton.position = CGPoint(x: UIScreen.main.bounds.width * 0.05, y: UIScreen.main.bounds.width * 0.05)
         
-        soundButton = SKSpriteNode(texture: SKTexture(imageNamed: "soundon"))
+        soundButton = SKSpriteNode(texture: SKTexture(imageNamed: soundOn ? "soundon" : "soundoff"))
         addChild(soundButton)
         soundButton.anchorPoint = CGPoint(x: 1, y: 0)
         soundButton.setScale((UIScreen.main.bounds.width / soundButton.frame.width) * 0.18)
@@ -90,12 +95,17 @@ class GameScene: SKScene {
         board.setScale(UIScreen.main.bounds.width / (UIScreen.main.bounds.width * 2))
         board.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2)
         
-        blackTitleLabel = SKLabelNode(text: "Black")
         blackTitleLabel.position = CGPoint(x: UIScreen.main.bounds.width * 3/4, y: (board.frame.maxY + UIScreen.main.bounds.height) / 2 +  blackTitleLabel.frame.height/2)
         blackTitleLabel.fontSize = UIScreen.main.bounds.width/10
         blackTitleLabel.horizontalAlignmentMode = .center
         blackTitleLabel.numberOfLines = 0
         addChild(blackTitleLabel)
+        
+        whiteTitleLabel.position = CGPoint(x: UIScreen.main.bounds.width * 1/4, y: (board.frame.maxY + UIScreen.main.bounds.height) / 2 +  whiteTitleLabel.frame.height/2)
+        whiteTitleLabel.fontSize = UIScreen.main.bounds.width/10
+        whiteTitleLabel.horizontalAlignmentMode = .center
+        whiteTitleLabel.numberOfLines = 0
+        addChild(whiteTitleLabel)
         
         blackCountLabel = SKLabelNode(text: "\(blackCount)")
         blackCountLabel.position = CGPoint(x: UIScreen.main.bounds.width * 3/4, y: ((board.frame.maxY + UIScreen.main.bounds.height) / 2) - blackCountLabel.frame.height)
@@ -104,13 +114,6 @@ class GameScene: SKScene {
         blackCountLabel.numberOfLines = 0
         addChild(blackCountLabel)
         
-        whiteTitleLabel = SKLabelNode(text: "White")
-        whiteTitleLabel.position = CGPoint(x: UIScreen.main.bounds.width * 1/4, y: (board.frame.maxY + UIScreen.main.bounds.height) / 2 +  whiteTitleLabel.frame.height/2)
-        whiteTitleLabel.fontSize = UIScreen.main.bounds.width/10
-        whiteTitleLabel.horizontalAlignmentMode = .center
-        whiteTitleLabel.numberOfLines = 0
-        addChild(whiteTitleLabel)
-        
         whiteCountLabel = SKLabelNode(text: "\(whiteCount)")
         whiteCountLabel.position = CGPoint(x: UIScreen.main.bounds.width * 1/4, y: ((board.frame.maxY + UIScreen.main.bounds.height) / 2) - whiteCountLabel.frame.height)
         whiteCountLabel.fontSize = UIScreen.main.bounds.width/10
@@ -118,7 +121,6 @@ class GameScene: SKScene {
         whiteCountLabel.numberOfLines = 0
         addChild(whiteCountLabel)
         
-        playerTurnLabel = SKLabelNode(text: "Black's turn.")
         playerTurnLabel.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: board.frame.minY / 2)
         playerTurnLabel.fontSize = UIScreen.main.bounds.width/10
         playerTurnLabel.horizontalAlignmentMode = .center
@@ -144,30 +146,30 @@ class GameScene: SKScene {
         whiteToBlackAnim = SKAction.animate(with: wtbFrames, timePerFrame: animTimePerFrame)
         
         InitGameState()
-        currentTurn = black;
+        currentTurn = black
     }
     
     //sets starting game state
     func InitGameState(){
         gameBoard = [[Character]](repeating: [Character](repeating: " ", count: boardSize), count: boardSize)
-                
+        
         for i in 0..<boardSize
         {
             for j in 0..<boardSize
             {
-                gameBoard[i][j] = empty;
+                gameBoard[i][j] = empty
             }
         }        
         
-        gameBoard[3][3] = white;
-        gameBoard[3][4] = black;
-        gameBoard[4][3] = black;
-        gameBoard[4][4] = white;
+        gameBoard[3][3] = white
+        gameBoard[3][4] = black
+        gameBoard[4][3] = black
+        gameBoard[4][4] = white
         
-        DrawDisc(colour: white, r: 3, c: 3);
-        DrawDisc(colour: black, r: 3, c: 4);
-        DrawDisc(colour: black, r: 4, c: 3);
-        DrawDisc(colour: white, r: 4, c: 4);
+        DrawDisc(colour: white, r: 3, c: 3)
+        DrawDisc(colour: black, r: 3, c: 4)
+        DrawDisc(colour: black, r: 4, c: 3)
+        DrawDisc(colour: white, r: 4, c: 4)
     }
     
     //renders <colour> disc at position [r, c] on the game board
@@ -199,25 +201,25 @@ class GameScene: SKScene {
     }
 	
 	func IsValidMove(colour: Character, r: Int, c: Int) -> Bool {
-		var opponent: Character = empty;
-		if colour == black { opponent = white; }
-		else if colour == white { opponent = black; }
+		var opponent: Character = empty
+		if colour == black { opponent = white }
+		else if colour == white { opponent = black }
 		
 		//checks if there is an adjacent opponent disc one direction at a time
 		//returns true if at least one direction returns true
 		if gameBoard[r][c] == empty
 		{
-			var distanceToEdge: Int = 0;
+			var distanceToEdge: Int = 0
 			
 			//bottom
 			if r + 1 < boardSize, gameBoard[r + 1][c] == opponent
 			{
-				distanceToEdge = boardSize - 1 - r;
+				distanceToEdge = boardSize - 1 - r
 				for x in 1...distanceToEdge
 				{
 					if gameBoard[r + x][c] == colour
 					{
-						return true;
+						return true
 					}
 				}
 			}
@@ -225,12 +227,12 @@ class GameScene: SKScene {
 			//top
 			if r - 1 > -1, gameBoard[r - 1][c] == opponent
 			{
-				distanceToEdge = r;
+				distanceToEdge = r
 				for x in 1...distanceToEdge
 				{
 					if gameBoard[r - x][c] == colour
 					{
-						return true;
+						return true
 					}
 				}
 			}
@@ -238,12 +240,12 @@ class GameScene: SKScene {
 			//right
 			if c + 1 < boardSize, gameBoard[r][c + 1] == opponent
 			{
-				distanceToEdge = boardSize - 1 - c;
+				distanceToEdge = boardSize - 1 - c
 				for y in 1...distanceToEdge
 				{
 					if gameBoard[r][c + y] == colour
 					{
-						return true;
+						return true
 					}
 				}
 			}
@@ -251,12 +253,12 @@ class GameScene: SKScene {
 			//left
 			if c - 1 > -1, gameBoard[r][c - 1] == opponent
 			{
-				distanceToEdge = c;
+				distanceToEdge = c
 				for y in 1...distanceToEdge
 				{
 					if gameBoard[r][c - y] == colour
 					{
-						return true;
+						return true
 					}
 				}
 			}
@@ -264,12 +266,12 @@ class GameScene: SKScene {
 			//bottom right
 			if r + 1 < boardSize, c + 1 < boardSize, gameBoard[r + 1][c + 1] == opponent
 			{
-				distanceToEdge = min(boardSize - 1 - r, boardSize - 1 - c);
+				distanceToEdge = min(boardSize - 1 - r, boardSize - 1 - c)
 				for xy in 1...distanceToEdge
 				{
 					if gameBoard[r + xy][c + xy] == colour
 					{
-						return true;
+						return true
 					}
 				}
 			}
@@ -277,12 +279,12 @@ class GameScene: SKScene {
 			//bottom left
 			if r + 1 < boardSize, c - 1 > -1, gameBoard[r + 1][c - 1] == opponent
 			{
-				distanceToEdge = min(boardSize - 1 - r, c);
+				distanceToEdge = min(boardSize - 1 - r, c)
 				for xy in 1...distanceToEdge
 				{
 					if gameBoard[r + xy][c - xy] == colour
 					{
-						return true;
+						return true
 					}
 				}
 			}
@@ -290,12 +292,12 @@ class GameScene: SKScene {
 			//top left
 			if r - 1 > -1, c - 1 > -1, gameBoard[r - 1][c - 1] == opponent
 			{
-				distanceToEdge = min(r, c);
+				distanceToEdge = min(r, c)
 				for xy in 1...distanceToEdge
 				{
 					if gameBoard[r - xy][c - xy] == colour
 					{
-						return true;
+						return true
 					}
 				}
 			}
@@ -303,18 +305,18 @@ class GameScene: SKScene {
 			//top right
 			if r - 1 > -1, c + 1 < boardSize, gameBoard[r - 1][c + 1] == opponent
 			{
-				distanceToEdge = min(r, boardSize - 1 - c);
+				distanceToEdge = min(r, boardSize - 1 - c)
 				for xy in 1...distanceToEdge
 				{
 					if gameBoard[r - xy][c + xy] == colour
 					{
-						return true;
+						return true
 					}
 				}
 			}
 		}
 		
-		return false;
+		return false
 	}
     
 	//places disc on board, immediately calls FlipDiscs()
@@ -324,14 +326,14 @@ class GameScene: SKScene {
         
 		for i in stride(from: 0, to:Double.pi * 2, by:Double.pi / 4)
 		{			
-			FlipDiscs(colour: colour, r: r, c: c, yDelta: Int(round(sin(i))), xDelta: Int(round(sin(i + Double.pi / 2))));
+			FlipDiscs(colour: colour, r: r, c: c, yDelta: Int(round(sin(i))), xDelta: Int(round(sin(i + Double.pi / 2))))
 		}
 	}
 
 	//flips discs according to standard Othello rules
 	func FlipDiscs(colour: Character, r: Int, c: Int, yDelta: Int, xDelta: Int) {
-		var nextRow: Int = r + yDelta;
-		var nextCol: Int = c + xDelta;
+		var nextRow: Int = r + yDelta
+		var nextCol: Int = c + xDelta
 		
         //holy motherfu-- what is this abomination
 		if nextRow < boardSize, nextRow > -1, nextCol < boardSize, nextCol > -1
@@ -343,18 +345,18 @@ class GameScene: SKScene {
 					while !(r == nextRow && c == nextCol)
 					{
                         if gameBoard[nextRow][nextCol] != colour {
-                            gameBoard[nextRow][nextCol] = colour;
+                            gameBoard[nextRow][nextCol] = colour
                             AnimateDisc(colour: colour == black ? black : white, r: nextRow, c: nextCol)
                         }
-						nextRow -= yDelta;
-						nextCol -= xDelta;
+						nextRow -= yDelta
+						nextCol -= xDelta
 					}
-					break;
+					break
 				}
 				else
 				{
-					nextRow += yDelta;
-					nextCol += xDelta;
+					nextRow += yDelta
+					nextCol += xDelta
 				}
 			}
 		}
@@ -371,7 +373,7 @@ class GameScene: SKScene {
     }
     
 	func IsGameOver() -> Bool {
-		return blackCount + whiteCount >= boardSize * boardSize;
+		return blackCount + whiteCount >= boardSize * boardSize
     }
     
     func GetDiscCount(colour: Character) -> Int{
@@ -403,9 +405,7 @@ class GameScene: SKScene {
     func PlaySound(url: URL) {
         do {
             audioPlayer = try AVAudioPlayer(contentsOf: url)
-            if isSoundOn {
-                audioPlayer.play()
-            }
+            if soundOn { audioPlayer.play() }
         } catch {
             print("Couldn't play file!")
         }
@@ -420,7 +420,7 @@ class GameScene: SKScene {
             }
             
             if (soundButton.frame.contains(t.location(in: self))) {
-                soundButton.texture = SKTexture(imageNamed: isSoundOn ? "soundon-pressed" : "soundoff-pressed")
+                soundButton.texture = SKTexture(imageNamed: soundOn ? "soundon-pressed" : "soundoff-pressed")
                 PlaySound(url: sfxClickDown)
                 touchStartLoc = soundButton.frame
             }
@@ -459,25 +459,28 @@ class GameScene: SKScene {
             }
             
             if (soundButton.frame.contains(t.location(in: self)) && touchStartLoc!.equalTo(soundButton.frame)) {
-                if (isSoundOn) {
+                if (soundOn) {
                     soundButton.texture = SKTexture(imageNamed: "soundoff")
-                    isSoundOn = false;
+                    soundOn = false
                     //no need to play sound here
                 }
                 else
                 {
                     soundButton.texture = SKTexture(imageNamed: "soundon")
-                    isSoundOn = true
+                    soundOn = true
                     PlaySound(url: sfxClickUp)
                 }
+                
+                //save sound state
+                UserDefaults.standard.set(soundOn, forKey: "sound")
             }
 			
             if (!pauseButton.frame.contains(t.location(in: self)) ||
                 !soundButton.frame.contains(t.location(in: self))) {
                 pauseButton.texture = SKTexture(imageNamed: "back")
-                soundButton.texture = SKTexture(imageNamed: isSoundOn ? "soundon" : "soundoff")
+                soundButton.texture = SKTexture(imageNamed: soundOn ? "soundon" : "soundoff")
                 touchStartLoc = CGRect(x: 0, y: 0, width: 0, height: 0)
-                return;
+                return
             }
             
             if (!IsGameOver()) {
