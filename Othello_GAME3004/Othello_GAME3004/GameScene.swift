@@ -12,7 +12,7 @@ import SpriteKit
 import GameplayKit
 
 class GameScene: SKScene {
-    // MARK: Internals
+    // MARK: Game logic vars
     //define board size, create game board
     let boardSize = 8;
     var gameBoard: [[Character]]!;
@@ -27,7 +27,8 @@ class GameScene: SKScene {
     var whiteCount = 2;
     var blackCount = 2;
     
-    // MARK: Scene display
+    // MARK: Scene display vars
+    //game
     var board: SKSpriteNode!
     let greenRatio: CGFloat = 73.0 / 80.0       //the percentage of the board sprite that is green
     var blackDisc: SKSpriteNode!
@@ -36,15 +37,22 @@ class GameScene: SKScene {
     var clickParticle: SKEmitterNode!
     var touchStartLoc: CGRect!
     
+    //text display
     var blackTitleLabel: SKLabelNode!
     var whiteTitleLabel: SKLabelNode!
     var blackCountLabel: SKLabelNode!
     var whiteCountLabel: SKLabelNode!
     var playerTurnLabel: SKLabelNode!
     
+    //animations
+    var blackToWhiteAnim: SKAction!
+    var whiteToBlackAnim: SKAction!
+    
+    //buttons
     var pauseButton: SKSpriteNode!
     var soundButton: SKSpriteNode!
     
+    //audio
     var isSoundOn: Bool = true
     var audioPlayer = AVAudioPlayer()
     var sfxClickDown: URL!
@@ -123,6 +131,17 @@ class GameScene: SKScene {
         addChild(whiteDisc)
         whiteDisc.position = CGPoint(x: -100, y: -100)                  //same as above
         
+        var btwFrames: [SKTexture] = [blackDisc.texture!]
+        var wtbFrames: [SKTexture] = [whiteDisc.texture!]
+        for i in 1..<12 {
+            btwFrames.append(SKTexture(imageNamed: "black\(i)"))
+            wtbFrames.append(SKTexture(imageNamed: "white\(i)"))
+        }
+        btwFrames.append(whiteDisc.texture!)
+        wtbFrames.append(blackDisc.texture!)
+        blackToWhiteAnim = SKAction.animate(with: btwFrames, timePerFrame: 0.1)
+        whiteToBlackAnim = SKAction.animate(with: wtbFrames, timePerFrame: 0.1)
+        
         InitGameState()
         currentTurn = black;
     }
@@ -163,7 +182,7 @@ class GameScene: SKScene {
             newBlackDisc.position.x += board.frame.minX + CGFloat(c) * 2
             newBlackDisc.position.y -= CGFloat(r) * 2
             addChild(newBlackDisc)
-            print("created \(newBlackDisc.name!) at \(newBlackDisc.position)")
+            print("\(newBlackDisc.xScale), \(newBlackDisc.yScale)")
         }
         
         if colour == white
@@ -176,20 +195,13 @@ class GameScene: SKScene {
             newWhiteDisc.position.x += board.frame.minX + CGFloat(c) * 2
             newWhiteDisc.position.y -= CGFloat(r) * 2
             addChild(newWhiteDisc)
-            print("created \(newWhiteDisc.name!) at \(newWhiteDisc.position)")
         }
     }
 	
 	func IsValidMove(colour: Character, r: Int, c: Int) -> Bool {
 		var opponent: Character = empty;
-		if colour == black
-		{
-			opponent = white;
-		}
-		else if colour == white
-		{
-			opponent = black;
-		}
+		if colour == black { opponent = white; }
+		else if colour == white { opponent = black; }
 		
 		//checks if there is an adjacent opponent disc one direction at a time
 		//returns true if at least one direction returns true
@@ -332,9 +344,7 @@ class GameScene: SKScene {
 					{
                         if gameBoard[nextRow][nextCol] != colour {
                             gameBoard[nextRow][nextCol] = colour;
-                            //replace redraws with animation later
-                            childNode(withName: "disc\(nextRow)\(nextCol)")?.removeFromParent()
-                            DrawDisc(colour: colour, r: nextRow, c: nextCol)
+                            AnimateDisc(colour: colour == black ? black : white, r: nextRow, c: nextCol)
                         }
 						nextRow -= yDelta;
 						nextCol -= xDelta;
@@ -349,6 +359,12 @@ class GameScene: SKScene {
 			}
 		}
 	}
+    
+    func AnimateDisc(colour: Character, r: Int, c: Int) {
+        childNode(withName: "disc\(r)\(c)")?.removeFromParent()
+        DrawDisc(colour: colour, r: r, c: c)
+        childNode(withName: "disc\(r)\(c)")?.run(colour == black ? whiteToBlackAnim : blackToWhiteAnim)
+    }
 	
     required init?(coder aDecoder: NSCoder) {
         fatalError("Init(coder: ) has not been implemented")
