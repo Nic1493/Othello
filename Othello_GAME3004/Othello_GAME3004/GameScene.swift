@@ -33,6 +33,7 @@ class GameScene: SKScene {
     // MARK: Scene display vars
     //general
     var background: SKSpriteNode!
+    var inputEnabled: Bool = true
     var clickParticle: SKEmitterNode!
     var touchStartLoc: CGRect!
     
@@ -362,12 +363,52 @@ class GameScene: SKScene {
 		}
 	}
     
+    //plays disc-flipping animation
     func AnimateDisc(colour: Character, r: Int, c: Int) {
         childNode(withName: "disc\(r)\(c)")?.removeFromParent()
         DrawDisc(colour: colour, r: r, c: c)
         childNode(withName: "disc\(r)\(c)")?.run(colour == black ? whiteToBlackAnim : blackToWhiteAnim)
     }
 	
+    //used by AI to determine all possible valid spsots to place a tile
+    //the parameter is unnecessary because the AI will always play as white, but is left in in case we decide to implement hint displays for the player
+    func FindValidMoves(colour: Character) -> [[Int]]
+    {
+        var validMoves: [[Int]] = [[Int]]();
+        
+        for i in 0..<boardSize
+        {
+            for j in 0..<boardSize
+            {
+                if gameBoard[i][j] == empty
+                {
+                    if IsValidMove(colour: colour, r: i, c: j)
+                    {
+                        var coordinate: [Int] = [Int]();
+                        coordinate.append(i);
+                        coordinate.append(j);
+                        validMoves.append(coordinate);
+                    }
+                }
+            }
+        }
+        
+        print("Possible moves: \(validMoves)");
+        return validMoves;
+    }
+    
+    //AI - places a tile in a valid spot at random
+    //always plays as white
+    func RunCPU()
+    {
+        var possibleValidMoves: [[Int]] = FindValidMoves(colour: white);
+        
+        let randNum: Int = Int(arc4random_uniform(UInt32(possibleValidMoves.count)));
+        let randChoice: [Int] = possibleValidMoves[randNum];
+        print("CPU has selected to make move at \(randChoice)");
+        PlaceDisc(colour: white, r: randChoice[0], c: randChoice[1]);
+    }
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("Init(coder: ) has not been implemented")
     }
@@ -390,16 +431,27 @@ class GameScene: SKScene {
         return discCount
     }
     
-    // Called before each frame is rendered
-    override func update(_ currentTime: TimeInterval) {
+    func UpdateDiscCount() {
         blackCount = GetDiscCount(colour: black)
         whiteCount = GetDiscCount(colour: white)
+    }
+    
+    func UpdateLabels() {
         blackCountLabel.text = "\(blackCount)"
         whiteCountLabel.text = "\(whiteCount)"
         
-        if IsGameOver() {
-            playerTurnLabel.text = (blackCount > whiteCount ? "Black wins!" : (blackCount == whiteCount ? "Tie game!" : "White wins!"))
+        if !IsGameOver() {
+            playerTurnLabel.text = singlePlayer ? (currentTurn == black ? "Your turn." : "CPU's turn.") : (currentTurn == black ? "Black's turn." : "White's turn.")
         }
+        else {
+            playerTurnLabel.text = blackCount > whiteCount ? (singlePlayer ? "You win!" : "Black wins!") : (blackCount == whiteCount ? "Tie game!" : (singlePlayer ? "CPU wins." : "White wins!"))
+        }
+    }
+    
+    // Called before each frame is rendered
+    override func update(_ currentTime: TimeInterval) {
+        UpdateDiscCount()
+        UpdateLabels()
     }
     
     func PlaySound(url: URL) {
@@ -433,7 +485,7 @@ class GameScene: SKScene {
             clickParticle.position = t.location(in: self)
             scene?.addChild(clickParticle)
 			
-            if (!IsGameOver()) {
+            if (!IsGameOver() && inputEnabled) {
                 if board.frame.contains(t.location(in: self)) {
                     let row: Int = Int(floor((board.frame.maxY - t.location(in: self).y) / (board.frame.height / 8)))
                     let col: Int = Int(floor((t.location(in: self).x - board.frame.minX) / (board.frame.width / 8)))
@@ -441,11 +493,14 @@ class GameScene: SKScene {
                         PlaceDisc(colour: currentTurn, r: row, c: col)
                         if currentTurn == black {
                             currentTurn = white
-                            playerTurnLabel.text = "White's turn."
+                            
+                            if singlePlayer {
+                                RunCPU()
+                                currentTurn = black
+                            }
                         }
                         else if currentTurn == white {
                             currentTurn = black
-                            playerTurnLabel.text = "Black's turn."
                         }
                     }
                 }
