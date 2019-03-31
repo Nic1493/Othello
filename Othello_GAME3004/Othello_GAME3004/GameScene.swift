@@ -153,7 +153,7 @@ class GameScene: SKScene {
     //sets starting game state
     func InitGameState(){
         gameBoard = [[Character]](repeating: [Character](repeating: " ", count: boardSize), count: boardSize)
-        
+        print(singlePlayer ? "1P selected" : "2P selected")
         for i in 0..<boardSize
         {
             for j in 0..<boardSize
@@ -337,7 +337,7 @@ class GameScene: SKScene {
 		var nextCol: Int = c + xDelta
 		
         //holy motherfu-- what is this abomination
-		if nextRow < boardSize, nextRow > -1, nextCol < boardSize, nextCol > -1
+		if nextRow < boardSize && nextRow > -1 && nextCol < boardSize && nextCol > -1
 		{
 			while gameBoard[nextRow][nextCol] != empty
 			{
@@ -366,15 +366,19 @@ class GameScene: SKScene {
     //plays disc-flipping animation
     func AnimateDisc(colour: Character, r: Int, c: Int) {
         childNode(withName: "disc\(r)\(c)")?.removeFromParent()
+        
         DrawDisc(colour: colour, r: r, c: c)
-        childNode(withName: "disc\(r)\(c)")?.run(colour == black ? whiteToBlackAnim : blackToWhiteAnim)
+        inputEnabled = false
+        self.childNode(withName: "disc\(r)\(c)")?.run(colour == self.black ? self.whiteToBlackAnim : self.blackToWhiteAnim)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: { self.inputEnabled = true })
     }
 	
     //used by AI to determine all possible valid spsots to place a tile
     //the parameter is unnecessary because the AI will always play as white, but is left in in case we decide to implement hint displays for the player
     func FindValidMoves(colour: Character) -> [[Int]]
     {
-        var validMoves: [[Int]] = [[Int]]();
+        var validMoves: [[Int]] = [[Int]]()
         
         for i in 0..<boardSize
         {
@@ -384,29 +388,32 @@ class GameScene: SKScene {
                 {
                     if IsValidMove(colour: colour, r: i, c: j)
                     {
-                        var coordinate: [Int] = [Int]();
-                        coordinate.append(i);
-                        coordinate.append(j);
-                        validMoves.append(coordinate);
+                        var coordinate: [Int] = [Int]()
+                        coordinate.append(i)
+                        coordinate.append(j)
+                        validMoves.append(coordinate)
                     }
                 }
             }
         }
         
-        print("Possible moves: \(validMoves)");
-        return validMoves;
+        //print("Possible moves: \(validMoves)")
+        return validMoves
     }
     
     //AI - places a tile in a valid spot at random
     //always plays as white
     func RunCPU()
     {
-        var possibleValidMoves: [[Int]] = FindValidMoves(colour: white);
+        var possibleValidMoves: [[Int]] = FindValidMoves(colour: white)
         
-        let randNum: Int = Int(arc4random_uniform(UInt32(possibleValidMoves.count)));
-        let randChoice: [Int] = possibleValidMoves[randNum];
-        print("CPU has selected to make move at \(randChoice)");
-        PlaceDisc(colour: white, r: randChoice[0], c: randChoice[1]);
+        let randNum: Int = Int(arc4random_uniform(UInt32(possibleValidMoves.count)))
+        let randChoice: [Int] = possibleValidMoves[randNum]
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
+            print("CPU has selected to make move at \(randChoice)")
+            self.PlaceDisc(colour: self.white, r: randChoice[0], c: randChoice[1])
+        })
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -485,7 +492,7 @@ class GameScene: SKScene {
             clickParticle.position = t.location(in: self)
             scene?.addChild(clickParticle)
 			
-            if (!IsGameOver() && inputEnabled) {
+            if !IsGameOver() && inputEnabled {
                 if board.frame.contains(t.location(in: self)) {
                     let row: Int = Int(floor((board.frame.maxY - t.location(in: self).y) / (board.frame.height / 8)))
                     let col: Int = Int(floor((t.location(in: self).x - board.frame.minX) / (board.frame.width / 8)))
@@ -536,16 +543,6 @@ class GameScene: SKScene {
                 soundButton.texture = SKTexture(imageNamed: soundOn ? "soundon" : "soundoff")
                 touchStartLoc = CGRect(x: 0, y: 0, width: 0, height: 0)
                 return
-            }
-            
-            if (!IsGameOver()) {
-                if board.frame.contains(t.location(in: self)) {
-                    let row: Int = Int(floor((board.frame.maxY - t.location(in: self).y) / (board.frame.height / 8)))
-                    let col: Int = Int(floor((t.location(in: self).x - board.frame.minX) / (board.frame.width / 8)))
-                    if IsValidMove(colour: currentTurn, r: row, c: col) {
-                        PlaceDisc(colour: currentTurn, r: row, c: col)
-                    }
-                }
             }
         }
     }
