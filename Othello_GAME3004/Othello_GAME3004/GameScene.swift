@@ -14,8 +14,9 @@ import GameplayKit
 class GameScene: SKScene {
     // MARK: Game logic vars
     //set board dimensions; internalize game board array
-    let boardSize = 8
+    let boardSize: Int = 8
     var gameBoard: [[Character]]!
+    var gameOver: Bool = false
     
     //character tokens for internal array handling
     let black: Character = "b"
@@ -405,20 +406,29 @@ class GameScene: SKScene {
         var possibleValidMoves: [[Int]] = FindValidMoves(colour: white)
         
         let randNum: Int = Int(arc4random_uniform(UInt32(possibleValidMoves.count)))
-        let randChoice: [Int] = possibleValidMoves[randNum]
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
-            print("CPU has selected to make move at \(randChoice)")
-            self.PlaceDisc(colour: self.white, r: randChoice[0], c: randChoice[1])
-        })
+        if possibleValidMoves.count != 0
+        {
+            let randChoice: [Int] = possibleValidMoves[randNum]
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
+                print("CPU has selected to make move at \(randChoice)")
+                self.PlaceDisc(colour: self.white, r: randChoice[0], c: randChoice[1])
+            })
+        }
+        else
+        {
+            gameOver = true
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("Init(coder: ) has not been implemented")
     }
     
-	func IsGameOver() -> Bool {
-		return blackCount + whiteCount >= boardSize * boardSize
+	func CheckGameOver(){
+        if blackCount + whiteCount >= boardSize * boardSize
+        {
+            gameOver = true
+        }
     }
     
     func GetDiscCount(colour: Character) -> Int{
@@ -444,7 +454,7 @@ class GameScene: SKScene {
         blackCountLabel.text = "\(blackCount)"
         whiteCountLabel.text = "\(whiteCount)"
         
-        if !IsGameOver() {
+        if !gameOver {
             playerTurnLabel.text = singlePlayer ? (currentTurn == black ? "Your turn." : "CPU's turn.") : (currentTurn == black ? "Black's turn." : "White's turn.")
         }
         else {
@@ -456,6 +466,7 @@ class GameScene: SKScene {
     override func update(_ currentTime: TimeInterval) {
         UpdateDiscCount()
         UpdateLabels()
+        CheckGameOver()
     }
     
     func PlaySound(url: URL) {
@@ -489,7 +500,7 @@ class GameScene: SKScene {
             clickParticle.position = t.location(in: self)
             scene?.addChild(clickParticle)
 			
-            if !IsGameOver() && inputEnabled {
+            if !gameOver && inputEnabled {
                 if board.frame.contains(t.location(in: self)) {
                     let row: Int = Int(floor((board.frame.maxY - t.location(in: self).y) / (board.frame.height / 8)))
                     let col: Int = Int(floor((t.location(in: self).x - board.frame.minX) / (board.frame.width / 8)))

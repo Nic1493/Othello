@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Othello_GAME3004/GameScene.swift"
-            timestampString = "575842913.37691"
+            timestampString = "575844841.442507"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "331"
-            endingLineNumber = "331"
+            startingLineNumber = "332"
+            endingLineNumber = "332"
             landmarkName = "PlaceDisc(colour:r:c:)"
             landmarkType = "7">
          </BreakpointContent>
