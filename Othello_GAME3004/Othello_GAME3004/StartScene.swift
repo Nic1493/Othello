@@ -11,7 +11,6 @@ import SpriteKit
 
 class StartScene: SKScene {
     
-    var placeHolderSprite: SKSpriteNode!
     var title: SKSpriteNode!
     var background: SKSpriteNode!
     
@@ -27,11 +26,6 @@ class StartScene: SKScene {
         background?.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2)
         background?.zPosition = -1;
         addChild(background)
-        
-        placeHolderSprite = SKSpriteNode(texture: SKTexture(imageNamed: "Placeholder"))
-        addChild(placeHolderSprite)
-        placeHolderSprite.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2)
-        placeHolderSprite.setScale(UIScreen.main.bounds.width/UIScreen.main.bounds.width)
     }
     
     required init?(coder aDecoder: NSCoder) {

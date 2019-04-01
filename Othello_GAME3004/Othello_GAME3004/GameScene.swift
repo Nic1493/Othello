@@ -145,7 +145,6 @@ class GameScene: SKScene {
         wtbFrames.append(blackDisc.texture!)
         blackToWhiteAnim = SKAction.animate(with: btwFrames, timePerFrame: animTimePerFrame)
         whiteToBlackAnim = SKAction.animate(with: wtbFrames, timePerFrame: animTimePerFrame)
-        
         InitGameState()
         currentTurn = black
     }
@@ -336,31 +335,29 @@ class GameScene: SKScene {
 		var nextRow: Int = r + yDelta
 		var nextCol: Int = c + xDelta
 		
-        //holy motherfu-- what is this abomination
-		if nextRow < boardSize && nextRow > -1 && nextCol < boardSize && nextCol > -1
-		{
-			while gameBoard[nextRow][nextCol] != empty
-			{
-				if gameBoard[nextRow][nextCol] == colour
-				{
-					while !(r == nextRow && c == nextCol)
-					{
-                        if gameBoard[nextRow][nextCol] != colour {
-                            gameBoard[nextRow][nextCol] = colour
-                            AnimateDisc(colour: colour == black ? black : white, r: nextRow, c: nextCol)
-                        }
-						nextRow -= yDelta
-						nextCol -= xDelta
-					}
-					break
-				}
-				else
-				{
-					nextRow += yDelta
-					nextCol += xDelta
-				}
-			}
-		}
+        ////holy motherfu-- what is this abomination
+        while nextRow < boardSize, nextRow > -1, nextCol < boardSize, nextCol > -1, gameBoard[nextRow][nextCol] != empty
+        {
+            if gameBoard[nextRow][nextCol] == colour
+            {
+                while !(r == nextRow && c == nextCol)
+                {
+                    if gameBoard[nextRow][nextCol] != colour
+                    {
+                        gameBoard[nextRow][nextCol] = colour
+                        AnimateDisc(colour: colour == black ? black : white, r: nextRow, c: nextCol)
+                    }
+                    nextRow -= yDelta
+                    nextCol -= xDelta
+                }
+                break
+            }
+            else
+            {
+                nextRow += yDelta
+                nextCol += xDelta
+            }
+        }
 	}
     
     //plays disc-flipping animation

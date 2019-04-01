@@ -49,15 +49,15 @@ class HowToPlayScene: SKScene {
         titleLabel.fontSize = UIScreen.main.bounds.width/8
         addChild(titleLabel)
         
-        instructionsLabel = SKLabelNode(text: "Objective of the Game: \nTo have the most discs on the board\nwhen the game ends. \n\nHow to Play: \nEach player take turns to place down \none disc on the board. The player's \ndisc must be placed beside the \nopposing player's disc to make a line \nwhere the last disc is the player's disc.")
+        instructionsLabel = SKLabelNode(text: "How to Play: \n\nEach turn, the player places one disc \non the board. Each disc played must \nbe laid adjacent to an opponent's disc \nso that the opponent's disc or a row of \nopponent's discs is flanked by the new \ndisc and another disc of the player's \ncolour. All of the opponent's discs \nbetween these two discs are 'captured' \nand turned over to match the player's \ncolour. \n\n\nObjective of the Game: \n\nTo have the most discs on the board\nwhen the game ends. \n\n" )
         instructionsLabel.numberOfLines = 0
-        instructionsLabel.horizontalAlignmentMode = .left
+        instructionsLabel.horizontalAlignmentMode = .center
+        instructionsLabel.verticalAlignmentMode = .top
         instructionsLabel.preferredMaxLayoutWidth = 500
-        instructionsLabel.lineBreakMode = NSLineBreakMode.byCharWrapping
-        instructionsLabel.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height * 4/10)
+        instructionsLabel.lineBreakMode = NSLineBreakMode.byWordWrapping
+        instructionsLabel.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height  * 0.8)
         instructionsLabel.fontSize = UIScreen.main.bounds.width/18
         addChild(instructionsLabel)
-        
     }
     
     required init?(coder aDecoder: NSCoder) {
