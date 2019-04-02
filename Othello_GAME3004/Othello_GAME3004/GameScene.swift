@@ -202,7 +202,7 @@ class GameScene: SKScene {
     }
 	
 	func IsValidMove(colour: Character, r: Int, c: Int) -> Bool {
-		var opponent: Character = empty
+        var opponent: Character = empty
 		if colour == black { opponent = white }
 		else if colour == white { opponent = black }
 		
@@ -210,111 +210,112 @@ class GameScene: SKScene {
 		//returns true if at least one direction returns true
 		if gameBoard[r][c] == empty
 		{
-			var distanceToEdge: Int = 0
-			
+			var distanceToEdge: Int = 0     //how many spaces is the disc away from the edge when checking each direction?
+            
 			//bottom
-			if r + 1 < boardSize, gameBoard[r + 1][c] == opponent
-			{
-				distanceToEdge = boardSize - 1 - r
-				for x in 1...distanceToEdge
-				{
-					if gameBoard[r + x][c] == colour
-					{
-						return true
+            if r + 2 < boardSize, gameBoard[r + 1][c] == opponent {     //if sandwich can be made and opponent is adjacent in the check direction
+                distanceToEdge = boardSize - 1 - r                      //calculate # of spaces away from the edge
+				for y in 2...distanceToEdge {                           //from disc's current position + 2 to the edge...
+					if gameBoard[r + y][c] == colour {                  //if there eventually is another disc of the same colour in this direction, sandwich confirmed
+                        return true
 					}
+                    else if gameBoard[r + y][c] == empty {              //if there eventually is an empty spot, break immediately and move on to the next check(s)
+                        break
+                    }
 				}
 			}
-			
+                                                                        //repeat check for all 7 other directions
 			//top
-			if r - 1 > -1, gameBoard[r - 1][c] == opponent
-			{
+			if r - 2 > -1, gameBoard[r - 1][c] == opponent {
 				distanceToEdge = r
-				for x in 1...distanceToEdge
-				{
-					if gameBoard[r - x][c] == colour
-					{
-						return true
+				for y in 2...distanceToEdge {
+					if gameBoard[r - y][c] == colour {
+                        return true
 					}
+                    else if gameBoard[r - y][c] == empty {
+                        break
+                    }
 				}
 			}
 			
 			//right
-			if c + 1 < boardSize, gameBoard[r][c + 1] == opponent
-			{
+            if c + 2 < boardSize, gameBoard[r][c + 1] == opponent {
 				distanceToEdge = boardSize - 1 - c
-				for y in 1...distanceToEdge
-				{
-					if gameBoard[r][c + y] == colour
-					{
-						return true
+				for x in 2...distanceToEdge {
+					if gameBoard[r][c + x] == colour {
+                        return true
 					}
+                    else if gameBoard[r][c + x] == empty {
+                        break
+                    }
 				}
 			}
 			
 			//left
-			if c - 1 > -1, gameBoard[r][c - 1] == opponent
-			{
+            if c - 2 > -1, gameBoard[r][c - 1] == opponent {
 				distanceToEdge = c
-				for y in 1...distanceToEdge
-				{
-					if gameBoard[r][c - y] == colour
-					{
-						return true
+				for x in 2...distanceToEdge {
+					if gameBoard[r][c - x] == colour {
+                        return true
 					}
+                    else if gameBoard[r][c - x] == empty {
+                        break
+                    }
 				}
 			}
 			
 			//bottom right
-			if r + 1 < boardSize, c + 1 < boardSize, gameBoard[r + 1][c + 1] == opponent
-			{
+			if r + 2 < boardSize, c + 2 < boardSize, gameBoard[r + 1][c + 1] == opponent {
 				distanceToEdge = min(boardSize - 1 - r, boardSize - 1 - c)
-				for xy in 1...distanceToEdge
-				{
-					if gameBoard[r + xy][c + xy] == colour
-					{
-						return true
+				for xy in 2...distanceToEdge {
+					if gameBoard[r + xy][c + xy] == colour {
+                        return true
 					}
+                    else if gameBoard[r + xy][c + xy] == empty {
+                        break
+                    }
 				}
 			}
 			
 			//bottom left
-			if r + 1 < boardSize, c - 1 > -1, gameBoard[r + 1][c - 1] == opponent
-			{
+			if r + 2 < boardSize, c - 2 > -1, gameBoard[r + 1][c - 1] == opponent {
 				distanceToEdge = min(boardSize - 1 - r, c)
-				for xy in 1...distanceToEdge
-				{
-					if gameBoard[r + xy][c - xy] == colour
-					{
-						return true
+				for xy in 2...distanceToEdge {
+					if gameBoard[r + xy][c - xy] == colour {
+                        return true
 					}
+                    else if gameBoard[r + xy][c - xy] == empty {
+                        break
+                    }
 				}
 			}
 			
 			//top left
-			if r - 1 > -1, c - 1 > -1, gameBoard[r - 1][c - 1] == opponent
-			{
+			if r - 2 > -1, c - 2 > -1, gameBoard[r - 1][c - 1] == opponent {
 				distanceToEdge = min(r, c)
-				for xy in 1...distanceToEdge
-				{
-					if gameBoard[r - xy][c - xy] == colour
-					{
-						return true
+				for xy in 2...distanceToEdge {
+					if gameBoard[r - xy][c - xy] == colour {
+                        return true
 					}
+                    else if gameBoard[r - xy][c - xy] == empty {
+                        break
+                    }
 				}
 			}
 			
 			//top right
-			if r - 1 > -1, c + 1 < boardSize, gameBoard[r - 1][c + 1] == opponent
-			{
+			if r - 2 > -1, c + 2 < boardSize, gameBoard[r - 1][c + 1] == opponent{
 				distanceToEdge = min(r, boardSize - 1 - c)
-				for xy in 1...distanceToEdge
-				{
-					if gameBoard[r - xy][c + xy] == colour
-					{
-						return true
+				for xy in 1...distanceToEdge {
+					if gameBoard[r - xy][c + xy] == colour{
+                        return true
 					}
+                    else if gameBoard[r - xy][c + xy] == empty {
+                        break
+                    }
 				}
 			}
+            
 		}
 		
 		return false
@@ -412,6 +413,7 @@ class GameScene: SKScene {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
                 print("CPU has selected to make move at \(randChoice)")
                 self.PlaceDisc(colour: self.white, r: randChoice[0], c: randChoice[1])
+                self.currentTurn = self.black
             })
         }
         else
@@ -509,10 +511,7 @@ class GameScene: SKScene {
                         if currentTurn == black {
                             currentTurn = white
                             
-                            if singlePlayer {
-                                RunCPU()
-                                currentTurn = black
-                            }
+                            if singlePlayer { RunCPU() }
                         }
                         else if currentTurn == white {
                             currentTurn = black
