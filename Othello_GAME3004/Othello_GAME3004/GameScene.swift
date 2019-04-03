@@ -65,7 +65,8 @@ class GameScene: SKScene {
     var audioPlayer = AVAudioPlayer()
     var sfxClickDown: URL!
     var sfxClickUp: URL!
-	
+	var sfxDiscPlace: URL!
+    
     override init(size: CGSize) {
         super.init(size: size)
         touchStartLoc = CGRect(x: 0, y: 0, width: 0, height: 0)
@@ -90,6 +91,7 @@ class GameScene: SKScene {
         
         sfxClickDown = Bundle.main.url(forResource: "button-click-down", withExtension: "mp3", subdirectory: "Sounds")
         sfxClickUp = Bundle.main.url(forResource: "button-click-up", withExtension: "mp3", subdirectory: "Sounds")
+        sfxDiscPlace = Bundle.main.url(forResource: "disc-place", withExtension: "mp3", subdirectory: "Sounds")
         
         board = SKSpriteNode(texture: SKTexture(imageNamed: "board"))
         addChild(board)
@@ -325,7 +327,7 @@ class GameScene: SKScene {
 	func PlaceDisc(colour: Character, r: Int, c: Int) {
 		gameBoard[r][c] = colour
 		DrawDisc(colour: colour, r: r, c: c)
-        
+        PlaySound(url: sfxDiscPlace)
 		for i in stride(from: 0, to:Double.pi * 2, by:Double.pi / 4)
 		{			
 			FlipDiscs(colour: colour, r: r, c: c, yDelta: Int(round(sin(i))), xDelta: Int(round(sin(i + Double.pi / 2))))
