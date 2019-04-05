@@ -43,6 +43,9 @@ class GameScene: SKScene {
     let greenRatio: CGFloat = 73.0 / 80.0       //the percentage of the board sprite that is green
     var blackDisc: SKSpriteNode!
     var whiteDisc: SKSpriteNode!
+    var blackHint: SKSpriteNode!
+    var whiteHint: SKSpriteNode!
+    let cpuDelay: Double = 1.5                  //how long the CPU delays itself before making a move (for the sake of R E A L I S M)
     
     //text display
     let playerTurnLabel: SKLabelNode! = SKLabelNode(text: "Black's turn.")
@@ -54,7 +57,8 @@ class GameScene: SKScene {
     //animations
     var blackToWhiteAnim: SKAction!
     var whiteToBlackAnim: SKAction!
-    let animTimePerFrame: Double = 0.05
+    let animTimePerFrame: Double = 0.05         //length of 1 frame in the disc-flipping animation
+    let animDelay: Double = 0.6                 //length of the delay before re-allowing input after the animation has started
     
     //buttons
     var pauseButton: SKSpriteNode!
@@ -138,6 +142,14 @@ class GameScene: SKScene {
         addChild(whiteDisc)
         whiteDisc.position = CGPoint(x: -100, y: -100)                  //same as above
         
+        blackHint = SKSpriteNode(texture: SKTexture(imageNamed: "hint-black"))
+        addChild(blackHint)
+        blackHint.position = CGPoint(x: -100, y: -100)
+        
+        whiteHint = SKSpriteNode(texture: SKTexture(imageNamed: "hint-white"))
+        addChild(whiteHint)
+        whiteHint.position = CGPoint(x: -100, y: -100)
+        
         var btwFrames: [SKTexture] = [blackDisc.texture!]
         var wtbFrames: [SKTexture] = [whiteDisc.texture!]
         for i in 1..<12 {
@@ -173,11 +185,12 @@ class GameScene: SKScene {
         DrawDisc(colour: black, r: 3, c: 4)
         DrawDisc(colour: black, r: 4, c: 3)
         DrawDisc(colour: white, r: 4, c: 4)
+        
+        DrawHints(colour: black)
     }
     
     //renders <colour> disc at position [r, c] on the game board
     func DrawDisc(colour: Character, r: Int, c: Int) {
-
         if colour == black
         {
             let newBlackDisc = blackDisc.copy() as! SKSpriteNode
@@ -200,6 +213,26 @@ class GameScene: SKScene {
             newWhiteDisc.position.x += board.frame.minX + CGFloat(c) * 2
             newWhiteDisc.position.y -= CGFloat(r) * 2
             addChild(newWhiteDisc)
+        }
+    }
+    
+    //renders hint sprites at valid move positions for the player(s)
+    func DrawHints(colour: Character) {
+        var possibleValidMoves: [[Int]] = FindValidMoves(colour: colour)
+        
+        for i in 0..<possibleValidMoves.count {
+            let r: Int = possibleValidMoves[i][0]
+            let c: Int = possibleValidMoves[i][1]
+            
+            let hintCopy = blackHint.copy() as! SKSpriteNode
+            hintCopy.texture = SKTexture(imageNamed: colour == black ? "hint-black" : "hint-white")
+            hintCopy.name = "hint"
+            hintCopy.anchorPoint = CGPoint(x: -greenRatio / 2, y: 1 + greenRatio / 2)
+            hintCopy.setScale(greenRatio * board.xScale)
+            hintCopy.position = CGPoint(x: board.frame.width * (CGFloat(c) / 8) * greenRatio, y: board.frame.maxY - board.frame.height * (CGFloat(r) / 8) * greenRatio)
+            hintCopy.position.x += board.frame.minX + CGFloat(c) * 2
+            hintCopy.position.y -= CGFloat(r) * 2
+            addChild(hintCopy)
         }
     }
 	
@@ -372,13 +405,13 @@ class GameScene: SKScene {
         inputEnabled = false
         self.childNode(withName: "disc\(r)\(c)")?.run(colour == self.black ? self.whiteToBlackAnim : self.blackToWhiteAnim)
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0, execute: { self.inputEnabled = true })
+        DispatchQueue.main.asyncAfter(deadline: .now() + animDelay, execute: { self.inputEnabled = true })
     }
 	
     //used by AI to determine all possible valid spsots to place a tile
+    //also used by players to draw hint sprites on board
     //the parameter is unnecessary because the AI will always play as white, but is left in in case we decide to implement hint displays for the player
-    func FindValidMoves(colour: Character) -> [[Int]]
-    {
+    func FindValidMoves(colour: Character) -> [[Int]] {
         var validMoves: [[Int]] = [[Int]]()
         
         for i in 0..<boardSize
@@ -404,22 +437,20 @@ class GameScene: SKScene {
     
     //AI - places a tile in a valid spot at random
     //always plays as white
-    func RunCPU()
-    {
+    func RunCPU() {
         var possibleValidMoves: [[Int]] = FindValidMoves(colour: white)
         
         let randNum: Int = Int(arc4random_uniform(UInt32(possibleValidMoves.count)))
-        if possibleValidMoves.count != 0
-        {
+        if possibleValidMoves.count != 0 {
             let randChoice: [Int] = possibleValidMoves[randNum]
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
+            DispatchQueue.main.asyncAfter(deadline: .now() + cpuDelay, execute: {
                 print("CPU has selected to make move at \(randChoice)")
                 self.PlaceDisc(colour: self.white, r: randChoice[0], c: randChoice[1])
                 self.currentTurn = self.black
+                DispatchQueue.main.asyncAfter(deadline: .now() + self.animDelay, execute: { self.DrawHints(colour: self.black) })
             })
         }
-        else
-        {
+        else {
             gameOver = true
         }
     }
@@ -509,14 +540,20 @@ class GameScene: SKScene {
                     let row: Int = Int(floor((board.frame.maxY - t.location(in: self).y) / (board.frame.height / 8)))
                     let col: Int = Int(floor((t.location(in: self).x - board.frame.minX) / (board.frame.width / 8)))
                     if IsValidMove(colour: currentTurn, r: row, c: col) {
+                        //clear previous hints before placing new disc
+                        for _ in 0..<FindValidMoves(colour: currentTurn == black ? black : white).count {
+                            childNode(withName: "hint")?.removeFromParent()
+                        }
+                        
                         PlaceDisc(colour: currentTurn, r: row, c: col)
                         if currentTurn == black {
                             currentTurn = white
-                            
                             if singlePlayer { RunCPU() }
+                            else { DispatchQueue.main.asyncAfter(deadline: .now() + animDelay, execute: { self.DrawHints(colour: self.white) }) }
                         }
                         else if currentTurn == white {
                             currentTurn = black
+                            DispatchQueue.main.asyncAfter(deadline: .now() + animDelay, execute: { self.DrawHints(colour: self.black) })
                         }
                     }
                 }
