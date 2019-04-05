@@ -43,8 +43,7 @@ class GameScene: SKScene {
     let greenRatio: CGFloat = 73.0 / 80.0       //the percentage of the board sprite that is green
     var blackDisc: SKSpriteNode!
     var whiteDisc: SKSpriteNode!
-    var blackHint: SKSpriteNode!
-    var whiteHint: SKSpriteNode!
+    var hintSprite: SKSpriteNode!
     let cpuDelay: Double = 1.5                  //how long the CPU delays itself before making a move (for the sake of R E A L I S M)
     
     //text display
@@ -142,13 +141,9 @@ class GameScene: SKScene {
         addChild(whiteDisc)
         whiteDisc.position = CGPoint(x: -100, y: -100)                  //same as above
         
-        blackHint = SKSpriteNode(texture: SKTexture(imageNamed: "hint-black"))
-        addChild(blackHint)
-        blackHint.position = CGPoint(x: -100, y: -100)
-        
-        whiteHint = SKSpriteNode(texture: SKTexture(imageNamed: "hint-white"))
-        addChild(whiteHint)
-        whiteHint.position = CGPoint(x: -100, y: -100)
+        hintSprite = SKSpriteNode(texture: SKTexture(imageNamed: "black0"))     //init.'d as black0 but can change to white0 depending on currentTurn
+        addChild(hintSprite)
+        hintSprite.position = CGPoint(x: -100, y: -100)
         
         var btwFrames: [SKTexture] = [blackDisc.texture!]
         var wtbFrames: [SKTexture] = [whiteDisc.texture!]
@@ -224,8 +219,9 @@ class GameScene: SKScene {
             let r: Int = possibleValidMoves[i][0]
             let c: Int = possibleValidMoves[i][1]
             
-            let hintCopy = blackHint.copy() as! SKSpriteNode
-            hintCopy.texture = SKTexture(imageNamed: colour == black ? "hint-black" : "hint-white")
+            let hintCopy = hintSprite.copy() as! SKSpriteNode
+            hintCopy.texture = SKTexture(imageNamed: colour == black ? "black0" : "white0")
+            hintCopy.alpha = 0.4
             hintCopy.name = "hint"
             hintCopy.anchorPoint = CGPoint(x: -greenRatio / 2, y: 1 + greenRatio / 2)
             hintCopy.setScale(greenRatio * board.xScale)
