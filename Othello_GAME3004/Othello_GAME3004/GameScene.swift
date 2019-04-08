@@ -455,6 +455,7 @@ class GameScene: SKScene {
         fatalError("Init(coder: ) has not been implemented")
     }
     
+    //checks if the board is full; if it is, then game is over
 	func CheckGameOver(){
         if blackCount + whiteCount >= boardSize * boardSize
         {
@@ -476,11 +477,13 @@ class GameScene: SKScene {
         return discCount
     }
     
+    //tracks disc count internally
     func UpdateDiscCount() {
         blackCount = GetDiscCount(colour: black)
         whiteCount = GetDiscCount(colour: white)
     }
     
+    //displays disc count on screen based on internal count
     func UpdateLabels() {
         blackCountLabel.text = "\(blackCount)"
         whiteCountLabel.text = "\(whiteCount)"
