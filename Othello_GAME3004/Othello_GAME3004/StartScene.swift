@@ -13,6 +13,10 @@ class StartScene: SKScene {
     
     var title: SKSpriteNode!
     var background: SKSpriteNode!
+    var startLabel: SKLabelNode!
+    var fadeIn: SKAction!
+    var fadeOut: SKAction!
+    var fadeOutFadeInSequence: SKAction!
     
     override init(size: CGSize) {
         super.init(size: size)
@@ -26,6 +30,17 @@ class StartScene: SKScene {
         background?.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2)
         background?.zPosition = -1;
         addChild(background)
+        
+        startLabel = SKLabelNode(fontNamed: "Timeless")
+        startLabel.text = "Touch To Start"
+        startLabel.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height * 0.2)
+        startLabel.fontSize = UIScreen.main.bounds.width/15
+        addChild(startLabel)
+        
+        fadeIn = SKAction.fadeAlpha(to: 1, duration: 1)
+        fadeOut = SKAction.fadeAlpha(to: 0.25, duration: 1)
+        fadeOutFadeInSequence = SKAction.repeatForever(SKAction.sequence([fadeOut, fadeIn]))
+        startLabel.run(fadeOutFadeInSequence)
     }
     
     required init?(coder aDecoder: NSCoder) {

@@ -102,12 +102,14 @@ class GameScene: SKScene {
         board.setScale(UIScreen.main.bounds.width / (UIScreen.main.bounds.width * 2))
         board.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2)
         
+        blackTitleLabel.fontName = "Timeless"
         blackTitleLabel.position = CGPoint(x: UIScreen.main.bounds.width * 3/4, y: (board.frame.maxY + UIScreen.main.bounds.height) / 2 +  blackTitleLabel.frame.height/2)
         blackTitleLabel.fontSize = UIScreen.main.bounds.width/10
         blackTitleLabel.horizontalAlignmentMode = .center
         blackTitleLabel.numberOfLines = 0
         addChild(blackTitleLabel)
         
+        whiteTitleLabel.fontName = "Timeless"
         whiteTitleLabel.position = CGPoint(x: UIScreen.main.bounds.width * 1/4, y: (board.frame.maxY + UIScreen.main.bounds.height) / 2 +  whiteTitleLabel.frame.height/2)
         whiteTitleLabel.fontSize = UIScreen.main.bounds.width/10
         whiteTitleLabel.horizontalAlignmentMode = .center
@@ -115,19 +117,22 @@ class GameScene: SKScene {
         addChild(whiteTitleLabel)
         
         blackCountLabel = SKLabelNode(text: "\(blackCount)")
-        blackCountLabel.position = CGPoint(x: UIScreen.main.bounds.width * 3/4, y: ((board.frame.maxY + UIScreen.main.bounds.height) / 2) - blackCountLabel.frame.height)
+        blackCountLabel.fontName = "Timeless"
+        blackCountLabel.position = CGPoint(x: UIScreen.main.bounds.width * 3/4, y: blackTitleLabel.position.y - 50)
         blackCountLabel.fontSize = UIScreen.main.bounds.width/10
         blackCountLabel.horizontalAlignmentMode = .center
         blackCountLabel.numberOfLines = 0
         addChild(blackCountLabel)
         
         whiteCountLabel = SKLabelNode(text: "\(whiteCount)")
-        whiteCountLabel.position = CGPoint(x: UIScreen.main.bounds.width * 1/4, y: ((board.frame.maxY + UIScreen.main.bounds.height) / 2) - whiteCountLabel.frame.height)
+        whiteCountLabel.fontName = "Timeless"
+        whiteCountLabel.position = CGPoint(x: UIScreen.main.bounds.width * 1/4, y: whiteTitleLabel.position.y - 50)
         whiteCountLabel.fontSize = UIScreen.main.bounds.width/10
         whiteCountLabel.horizontalAlignmentMode = .center
         whiteCountLabel.numberOfLines = 0
         addChild(whiteCountLabel)
         
+        playerTurnLabel.fontName = "Timeless"
         playerTurnLabel.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: board.frame.minY / 2)
         playerTurnLabel.fontSize = UIScreen.main.bounds.width/10
         playerTurnLabel.horizontalAlignmentMode = .center

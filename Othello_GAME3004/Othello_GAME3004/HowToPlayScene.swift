@@ -16,7 +16,11 @@ class HowToPlayScene: SKScene {
     var touchStartLoc: CGRect!
     
     var titleLabel: SKLabelNode!
+    
+    var howToPlayLabel: SKLabelNode!
     var instructionsLabel: SKLabelNode!
+    var objectiveTitleLabel: SKLabelNode!
+    var objectiveLabel: SKLabelNode!
     
     var backButton: SKSpriteNode!
     
@@ -25,13 +29,15 @@ class HowToPlayScene: SKScene {
     let sfxClickDown: URL! = Bundle.main.url(forResource: "button-click-down", withExtension: "mp3", subdirectory: "Sounds")
     let sfxClickUp: URL! = Bundle.main.url(forResource: "button-click-up", withExtension: "mp3", subdirectory: "Sounds")
     
+    
+    
     override init(size: CGSize) {
         super.init(size: size)
         touchStartLoc = CGRect(x: 0, y: 0, width: 0, height: 0)
         
         background = SKSpriteNode(imageNamed: "menu-BG")
         background?.size = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
-        background?.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height / 2)
+        background?.position = CGPoint(x: UIScreen.main.bounds.width * 0.5, y: UIScreen.main.bounds.height * 0.5)
         background?.zPosition = -1;
         addChild(background)
         
@@ -43,21 +49,49 @@ class HowToPlayScene: SKScene {
         backButton.position = CGPoint(x: UIScreen.main.bounds.width * 0.05, y: UIScreen.main.bounds.width * 0.05)
         backButton.setScale((UIScreen.main.bounds.width / backButton.frame.width) * 0.18)
         
-        //label = SKLabelNode(fontNamed: "Chalkduster")
-        titleLabel = SKLabelNode(text: "How To Play")
-        titleLabel.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height * 8.5/10)
+        titleLabel = SKLabelNode(fontNamed: "Timeless")
+        titleLabel.text = "How To Play"
+        titleLabel.position = CGPoint(x: UIScreen.main.bounds.width * 0.5, y: UIScreen.main.bounds.height * 8.5/10)
         titleLabel.fontSize = UIScreen.main.bounds.width/8
         addChild(titleLabel)
         
-        instructionsLabel = SKLabelNode(text: "How to Play: \n\nEach turn, the player places one disc \non the board. Each disc played must \nbe laid adjacent to an opponent's disc \nso that the opponent's disc or a row of \nopponent's discs is flanked by the new \ndisc and another disc of the player's \ncolour. All of the opponent's discs \nbetween these two discs are 'captured' \nand turned over to match the player's \ncolour. \n\n\nObjective of the Game: \n\nTo have the most discs on the board\nwhen the game ends. \n\n" )
+        howToPlayLabel = SKLabelNode(text: "~ How to Play ~")
+        howToPlayLabel.fontName = "Timeless"
+        howToPlayLabel.horizontalAlignmentMode = .center
+        howToPlayLabel.verticalAlignmentMode = .top
+        howToPlayLabel.position = CGPoint(x: UIScreen.main.bounds.width * 0.5, y: UIScreen.main.bounds.height  * 0.8)
+        howToPlayLabel.fontSize = UIScreen.main.bounds.width/18
+        addChild(howToPlayLabel)
+        
+        instructionsLabel = SKLabelNode(text: "Each turn, the player places one disc on the board. Each disc played must be laid adjacent to an opponent's disc so that the opponent's disc or a row of opponent's discs is flanked by the new disc and another disc of the player's colour. All of the opponent's discs between these two discs are 'captured' and turned over to match the player's colour.")
+        instructionsLabel.fontName = "Timeless"
         instructionsLabel.numberOfLines = 0
-        instructionsLabel.horizontalAlignmentMode = .center
+        instructionsLabel.horizontalAlignmentMode = .left
         instructionsLabel.verticalAlignmentMode = .top
-        instructionsLabel.preferredMaxLayoutWidth = 500
-        instructionsLabel.lineBreakMode = NSLineBreakMode.byWordWrapping
-        instructionsLabel.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height  * 0.8)
+        instructionsLabel.preferredMaxLayoutWidth = UIScreen.main.bounds.width * 0.8
+        instructionsLabel.position = CGPoint(x: UIScreen.main.bounds.width  * 0.1, y: UIScreen.main.bounds.height  * 0.75)
         instructionsLabel.fontSize = UIScreen.main.bounds.width/18
         addChild(instructionsLabel)
+
+        
+        objectiveTitleLabel = SKLabelNode(text: "~ Objective ~")
+        objectiveTitleLabel.fontName = "Timeless"
+        objectiveTitleLabel.horizontalAlignmentMode = .center
+        objectiveTitleLabel.verticalAlignmentMode = .top
+        objectiveTitleLabel.position = CGPoint(x: UIScreen.main.bounds.width * 0.5, y: UIScreen.main.bounds.height  * 0.25)
+        objectiveTitleLabel.fontSize = UIScreen.main.bounds.width/18
+        addChild(objectiveTitleLabel)
+        
+        
+        objectiveLabel = SKLabelNode(text: "To have the most discs on the board when the game ends.")
+        objectiveLabel.fontName = "Timeless"
+        objectiveLabel.numberOfLines = 0
+        objectiveLabel.horizontalAlignmentMode = .left
+        objectiveLabel.verticalAlignmentMode = .top
+        objectiveLabel.preferredMaxLayoutWidth = UIScreen.main.bounds.width * 0.8
+        objectiveLabel.position = CGPoint(x: UIScreen.main.bounds.width * 0.1, y: UIScreen.main.bounds.height  * 0.2)
+        objectiveLabel.fontSize = UIScreen.main.bounds.width/18
+        addChild(objectiveLabel)
     }
     
     required init?(coder aDecoder: NSCoder) {
