@@ -211,6 +211,12 @@ class GameScene: SKScene {
         }
     }
     
+    func SetHintsActive(state: Bool) {
+        for _ in 0..<FindValidMoves(colour: currentTurn == black ? black : white).count {
+            //childNode(withName: "hint")?.alpha = state ? 0.4 : 0
+        }
+    }
+    
     //renders hint sprites at valid move positions for the player(s)
     func DrawHints(colour: Character) {
         var possibleValidMoves: [[Int]] = FindValidMoves(colour: colour)
@@ -569,12 +575,14 @@ class GameScene: SKScene {
                 if (soundOn) {
                     soundButton.texture = SKTexture(imageNamed: "soundoff")
                     soundOn = false
+                    SetHintsActive(state: false)
                     //no need to play sound here
                 }
                 else
                 {
                     soundButton.texture = SKTexture(imageNamed: "soundon")
                     soundOn = true
+                    SetHintsActive(state: true)
                     PlaySound(url: sfxClickUp)
                 }
                 
