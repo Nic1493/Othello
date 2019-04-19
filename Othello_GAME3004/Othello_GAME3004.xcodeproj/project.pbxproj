@@ -21,6 +21,7 @@
 		1470150A22383DD1002FA488 /* MainMenuScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1470150922383DD1002FA488 /* MainMenuScene.swift */; };
 		1470150C22384C6C002FA488 /* HowToPlayScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1470150B22384C6C002FA488 /* HowToPlayScene.swift */; };
 		1470150E223852FF002FA488 /* StartScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1470150D223852FF002FA488 /* StartScene.swift */; };
+		2E260FD6225F886A00418D6B /* Timeless.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2E260FD5225F886A00418D6B /* Timeless.ttf */; };
 		706237D122485B8700FDD98C /* ClickParticle.sks in Resources */ = {isa = PBXBuildFile; fileRef = 706237CF22485B8700FDD98C /* ClickParticle.sks */; };
 		706237D4224864C300FDD98C /* Particle Sprite Atlas.spriteatlas in Resources */ = {isa = PBXBuildFile; fileRef = 706237D3224864C300FDD98C /* Particle Sprite Atlas.spriteatlas */; };
 		9265C71A2249CDBE00543E7E /* Sounds in Resources */ = {isa = PBXBuildFile; fileRef = 9265C7192249CDBD00543E7E /* Sounds */; };
@@ -64,6 +65,7 @@
 		1470150922383DD1002FA488 /* MainMenuScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenuScene.swift; sourceTree = "<group>"; };
 		1470150B22384C6C002FA488 /* HowToPlayScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HowToPlayScene.swift; sourceTree = "<group>"; };
 		1470150D223852FF002FA488 /* StartScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartScene.swift; sourceTree = "<group>"; };
+		2E260FD5225F886A00418D6B /* Timeless.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Timeless.ttf; path = ../../Assets/Timeless.ttf; sourceTree = "<group>"; };
 		706237CF22485B8700FDD98C /* ClickParticle.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = ClickParticle.sks; path = Assets.xcassets/ClickParticle.sks; sourceTree = "<group>"; };
 		706237D3224864C300FDD98C /* Particle Sprite Atlas.spriteatlas */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "Particle Sprite Atlas.spriteatlas"; path = "Assets.xcassets/Particle Sprite Atlas.spriteatlas"; sourceTree = "<group>"; };
 		9265C7192249CDBD00543E7E /* Sounds */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Sounds; path = ../../Assets/Sounds; sourceTree = "<group>"; };
@@ -133,6 +135,7 @@
 				1470150922383DD1002FA488 /* MainMenuScene.swift */,
 				1470150B22384C6C002FA488 /* HowToPlayScene.swift */,
 				1470150D223852FF002FA488 /* StartScene.swift */,
+				2E260FD5225F886A00418D6B /* Timeless.ttf */,
 			);
 			path = Othello_GAME3004;
 			sourceTree = "<group>";
@@ -262,6 +265,7 @@
 				706237D122485B8700FDD98C /* ClickParticle.sks in Resources */,
 				706237D4224864C300FDD98C /* Particle Sprite Atlas.spriteatlas in Resources */,
 				9265C71A2249CDBE00543E7E /* Sounds in Resources */,
+				2E260FD6225F886A00418D6B /* Timeless.ttf in Resources */,
 				147014DF223837D2002FA488 /* Main.storyboard in Resources */,
 				147014D6223837D2002FA488 /* GameScene.sks in Resources */,
 				147014E1223837D4002FA488 /* Assets.xcassets in Resources */,

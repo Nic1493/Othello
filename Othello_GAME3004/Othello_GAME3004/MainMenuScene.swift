@@ -22,7 +22,7 @@ class MainMenuScene: SKScene {
     var howToPlayButton: SKSpriteNode!
     var soundButton: SKSpriteNode!
     
-    var soundOn: Bool = UserDefaults.standard.bool(forKey: "sound")
+    var soundOn: Bool = true
     var audioPlayer = AVAudioPlayer()
     var sfxClickDown: URL!
     var sfxClickUp: URL!
@@ -117,6 +117,7 @@ class MainMenuScene: SKScene {
             if (P1Button.frame.contains(t.location(in: self)) && touchStartLoc!.equalTo(P1Button.frame)) {
                 P1Button.texture = SKTexture(imageNamed: "1P")
                 UserDefaults.standard.set(true, forKey: "singlePlayer")
+                UserDefaults.standard.set(soundOn, forKey: "sound")
                 PlaySound(url: sfxClickUp)
                 let scene = GameScene(size: self.size)
                 let transition = SKTransition.doorsOpenHorizontal(withDuration: 0.5)
@@ -126,6 +127,7 @@ class MainMenuScene: SKScene {
             if (P2Button.frame.contains(t.location(in: self)) && touchStartLoc!.equalTo(P2Button.frame)) {
                 P2Button.texture = SKTexture(imageNamed: "2P")
                 UserDefaults.standard.set(false, forKey: "singlePlayer")
+                UserDefaults.standard.set(soundOn, forKey: "sound")
                 PlaySound(url: sfxClickUp)
                 let scene = GameScene(size: self.size)
                 let transition = SKTransition.doorsOpenHorizontal(withDuration: 0.5)
@@ -134,6 +136,7 @@ class MainMenuScene: SKScene {
             
             if (howToPlayButton.frame.contains(t.location(in: self)) && touchStartLoc!.equalTo(howToPlayButton.frame)) {
                 howToPlayButton.texture = SKTexture(imageNamed: "howtoplay")
+                UserDefaults.standard.set(soundOn, forKey: "sound")
                 PlaySound(url: sfxClickUp)
                 let scene = HowToPlayScene(size: self.size)
                 let transition = SKTransition.moveIn(with: .up, duration: 0.5)
