@@ -32,7 +32,7 @@ class StartScene: SKScene {
         addChild(background)
         
         startLabel = SKLabelNode(fontNamed: "Timeless")
-        startLabel.text = "Touch To Start"
+        startLabel.text = "Touch to Start"
         startLabel.position = CGPoint(x: UIScreen.main.bounds.width / 2, y: UIScreen.main.bounds.height * 0.2)
         startLabel.fontSize = UIScreen.main.bounds.width/15
         addChild(startLabel)

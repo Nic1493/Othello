@@ -45,6 +45,7 @@ class GameScene: SKScene {
     var whiteDisc: SKSpriteNode!
     var hintSprite: SKSpriteNode!
     let cpuDelay: Double = 1.5                  //how long the CPU delays itself before making a move (for the sake of R E A L I S M)
+    var hintsActive: Bool = true                //
     
     //text display
     let playerTurnLabel: SKLabelNode! = SKLabelNode(text: "Black's turn.")
@@ -160,8 +161,9 @@ class GameScene: SKScene {
         wtbFrames.append(blackDisc.texture!)
         blackToWhiteAnim = SKAction.animate(with: btwFrames, timePerFrame: animTimePerFrame)
         whiteToBlackAnim = SKAction.animate(with: wtbFrames, timePerFrame: animTimePerFrame)
-        InitGameState()
+        
         currentTurn = black
+        InitGameState()
     }
     
     //sets starting game state
@@ -186,52 +188,54 @@ class GameScene: SKScene {
         DrawDisc(colour: black, r: 4, c: 3)
         DrawDisc(colour: white, r: 4, c: 4)
         
-        DrawHints(colour: black)
+        DrawHints()
     }
     
     //renders <colour> disc at position [r, c] on the game board
     func DrawDisc(colour: Character, r: Int, c: Int) {
-        if colour == black
-        {
-            let newBlackDisc = blackDisc.copy() as! SKSpriteNode
-            newBlackDisc.name = "disc\(r)\(c)"
-            newBlackDisc.anchorPoint = CGPoint(x: -greenRatio / 2, y: 1 + greenRatio / 2)
-            newBlackDisc.setScale(greenRatio * board.xScale)
-            newBlackDisc.position = CGPoint(x: board.frame.width * (CGFloat(c) / 8) * greenRatio, y: board.frame.maxY - board.frame.height * (CGFloat(r) / 8) * greenRatio)
-            newBlackDisc.position.x += board.frame.minX + CGFloat(c) * 2
-            newBlackDisc.position.y -= CGFloat(r) * 2
-            addChild(newBlackDisc)
+        let discCopy = blackDisc.copy() as! SKSpriteNode
+        //change texture to whiteDisc if colour is white, otherwise keep it as is
+        if colour == white {
+            discCopy.texture = whiteDisc.texture
         }
+        discCopy.name = "disc\(r)\(c)"
+        discCopy.anchorPoint = CGPoint(x: -greenRatio / 2, y: 1 + greenRatio / 2)
+        discCopy.setScale(greenRatio * board.xScale)
+        discCopy.position = CGPoint(x: board.frame.width * (CGFloat(c) / 8) * greenRatio, y: board.frame.maxY - board.frame.height * (CGFloat(r) / 8) * greenRatio)
+        discCopy.position.x += board.frame.minX + CGFloat(c) * 2
+        discCopy.position.y -= CGFloat(r) * 2
+        addChild(discCopy)
+    }
+    
+    //sets hint opacity based on <hintsActive>
+    func ToggleHints() {
+        hintsActive = !hintsActive
         
-        if colour == white
-        {
-            let newWhiteDisc = whiteDisc.copy() as! SKSpriteNode
-            newWhiteDisc.name = "disc\(r)\(c)"
-            newWhiteDisc.anchorPoint = CGPoint(x: -greenRatio / 2, y: 1 + greenRatio / 2)
-            newWhiteDisc.setScale(greenRatio * board.xScale)
-            newWhiteDisc.position = CGPoint(x: board.frame.width * (CGFloat(c) / 8) * greenRatio, y: board.frame.maxY - board.frame.height * (CGFloat(r) / 8) * greenRatio)
-            newWhiteDisc.position.x += board.frame.minX + CGFloat(c) * 2
-            newWhiteDisc.position.y -= CGFloat(r) * 2
-            addChild(newWhiteDisc)
+        if (hintsActive) {
+            DrawHints()
+        }
+        else {
+            RemoveHints()
         }
     }
     
-    func SetHintsActive(state: Bool) {
+    //removes all hint sprites from scene
+    func RemoveHints() {
         for _ in 0..<FindValidMoves(colour: currentTurn == black ? black : white).count {
-            //childNode(withName: "hint")?.alpha = state ? 0.4 : 0
+            childNode(withName: "hint")?.removeFromParent()
         }
     }
     
     //renders hint sprites at valid move positions for the player(s)
-    func DrawHints(colour: Character) {
-        var possibleValidMoves: [[Int]] = FindValidMoves(colour: colour)
+    func DrawHints() {
+        var possibleValidMoves: [[Int]] = FindValidMoves(colour: currentTurn)
         
         for i in 0..<possibleValidMoves.count {
             let r: Int = possibleValidMoves[i][0]
             let c: Int = possibleValidMoves[i][1]
             
             let hintCopy = hintSprite.copy() as! SKSpriteNode
-            hintCopy.texture = SKTexture(imageNamed: colour == black ? "black0" : "white0")
+            hintCopy.texture = SKTexture(imageNamed: currentTurn == black ? "black0" : "white0")
             hintCopy.alpha = 0.4
             hintCopy.name = "hint"
             hintCopy.anchorPoint = CGPoint(x: -greenRatio / 2, y: 1 + greenRatio / 2)
@@ -379,7 +383,7 @@ class GameScene: SKScene {
 		var nextRow: Int = r + yDelta
 		var nextCol: Int = c + xDelta
 		
-        ////holy motherfu-- what is this abomination
+        //O_O
         while nextRow < boardSize, nextRow > -1, nextCol < boardSize, nextCol > -1, gameBoard[nextRow][nextCol] != empty
         {
             if gameBoard[nextRow][nextCol] == colour
@@ -453,12 +457,11 @@ class GameScene: SKScene {
             DispatchQueue.main.asyncAfter(deadline: .now() + cpuDelay, execute: {
                 print("CPU has selected to make move at \(randChoice)")
                 self.PlaceDisc(colour: self.white, r: randChoice[0], c: randChoice[1])
-                self.currentTurn = self.black
-                DispatchQueue.main.asyncAfter(deadline: .now() + self.animDelay, execute: { self.DrawHints(colour: self.black) })
+                DispatchQueue.main.asyncAfter(deadline: .now() + self.animDelay, execute: { self.PassTurn() } )
             })
         }
         else {
-            gameOver = true
+            PassTurn()
         }
     }
     
@@ -466,12 +469,29 @@ class GameScene: SKScene {
         fatalError("Init(coder: ) has not been implemented")
     }
     
+    func PassTurn() {
+        if currentTurn == black {
+            currentTurn = white
+            if singlePlayer {
+                RunCPU()
+            }
+            else {
+                if (hintsActive) {
+                    DrawHints()
+                }
+            }
+        }
+        else if currentTurn == white {
+            currentTurn = black
+            if (hintsActive) {
+                DrawHints()
+            }
+        }
+    }
+    
     //checks if the board is full; if it is, then game is over
 	func CheckGameOver(){
-        if blackCount + whiteCount >= boardSize * boardSize
-        {
-            gameOver = true
-        }
+        gameOver = blackCount + whiteCount >= boardSize * boardSize
     }
     
     func GetDiscCount(colour: Character) -> Int{
@@ -550,21 +570,9 @@ class GameScene: SKScene {
                     let row: Int = Int(floor((board.frame.maxY - t.location(in: self).y) / (board.frame.height / 8)))
                     let col: Int = Int(floor((t.location(in: self).x - board.frame.minX) / (board.frame.width / 8)))
                     if IsValidMove(colour: currentTurn, r: row, c: col) {
-                        //clear previous hints before placing new disc
-                        for _ in 0..<FindValidMoves(colour: currentTurn == black ? black : white).count {
-                            childNode(withName: "hint")?.removeFromParent()
-                        }
-                        
+                        RemoveHints()
                         PlaceDisc(colour: currentTurn, r: row, c: col)
-                        if currentTurn == black {
-                            currentTurn = white
-                            if singlePlayer { RunCPU() }
-                            else { DispatchQueue.main.asyncAfter(deadline: .now() + animDelay, execute: { self.DrawHints(colour: self.white) }) }
-                        }
-                        else if currentTurn == white {
-                            currentTurn = black
-                            DispatchQueue.main.asyncAfter(deadline: .now() + animDelay, execute: { self.DrawHints(colour: self.black) })
-                        }
+                        DispatchQueue.main.asyncAfter(deadline: .now() + animDelay, execute: {self.PassTurn()})
                     }
                 }
             }
@@ -580,14 +588,14 @@ class GameScene: SKScene {
                 if (soundOn) {
                     soundButton.texture = SKTexture(imageNamed: "soundoff")
                     soundOn = false
-                    SetHintsActive(state: false)
+                    ToggleHints()
                     //no need to play sound here
                 }
                 else
                 {
                     soundButton.texture = SKTexture(imageNamed: "soundon")
                     soundOn = true
-                    SetHintsActive(state: true)
+                    ToggleHints()
                     PlaySound(url: sfxClickUp)
                 }
                 
