@@ -64,6 +64,7 @@ class GameScene: SKScene {
     //buttons
     var pauseButton: SKSpriteNode!
     var soundButton: SKSpriteNode!
+    var hintButton: SKSpriteNode!
     
     //audio
     var soundOn: Bool = UserDefaults.standard.bool(forKey: "sound")
@@ -93,6 +94,11 @@ class GameScene: SKScene {
         soundButton.anchorPoint = CGPoint(x: 1, y: 0)
         soundButton.setScale((UIScreen.main.bounds.width / soundButton.frame.width) * 0.18)
         soundButton.position = CGPoint(x: UIScreen.main.bounds.width * 0.95, y: UIScreen.main.bounds.width * 0.05)
+        
+        hintButton = SKSpriteNode(texture: SKTexture(imageNamed: hintsActive ? "hintson" : "hintsoff"))
+        addChild(hintButton)
+        hintButton.setScale((UIScreen.main.bounds.width / hintButton.frame.width) * 0.4)
+        hintButton.position = CGPoint(x: UIScreen.main.bounds.width * 0.5, y: UIScreen.main.bounds.width * 0.05)
         
         sfxClickDown = Bundle.main.url(forResource: "button-click-down", withExtension: "mp3", subdirectory: "Sounds")
         sfxClickUp = Bundle.main.url(forResource: "button-click-up", withExtension: "mp3", subdirectory: "Sounds")
@@ -582,6 +588,12 @@ class GameScene: SKScene {
                 PlaySound(url: sfxClickDown)
                 touchStartLoc = soundButton.frame
             }
+            
+            if hintButton.frame.contains(t.location(in: self)) {
+                hintButton.texture = SKTexture(imageNamed: hintsActive ? "hintson-pressed" : "hintsoff-pressed")
+                PlaySound(url: sfxClickDown)
+                touchStartLoc = hintButton.frame
+            }
         }
     }
     
@@ -614,25 +626,43 @@ class GameScene: SKScene {
                 if (soundOn) {
                     soundButton.texture = SKTexture(imageNamed: "soundoff")
                     soundOn = false
-                    ToggleHints()
                     //no need to play sound here
                 }
                 else
                 {
                     soundButton.texture = SKTexture(imageNamed: "soundon")
                     soundOn = true
-                    ToggleHints()
                     PlaySound(url: sfxClickUp)
                 }
                 
                 //save sound state
                 UserDefaults.standard.set(soundOn, forKey: "sound")
             }
+            
+            
+            
+            if (hintButton.frame.contains(t.location(in: self)) && touchStartLoc!.equalTo(hintButton.frame)) {
+                if (hintsActive) {
+                    hintButton.texture = SKTexture(imageNamed: "hintsoff")
+                    //hintsActive = false
+                    ToggleHints()
+                    PlaySound(url: sfxClickUp)
+                }
+                else
+                {
+                    hintButton.texture = SKTexture(imageNamed: "hintson")
+                    //hintsActive = true
+                    ToggleHints()
+                    PlaySound(url: sfxClickUp)
+                }
+            }
 			
             if (!pauseButton.frame.contains(t.location(in: self)) ||
-                !soundButton.frame.contains(t.location(in: self))) {
+                !soundButton.frame.contains(t.location(in: self)) ||
+                !hintButton.frame.contains(t.location(in: self))) {
                 pauseButton.texture = SKTexture(imageNamed: "back")
                 soundButton.texture = SKTexture(imageNamed: soundOn ? "soundon" : "soundoff")
+                hintButton.texture = SKTexture(imageNamed: hintsActive ? "hintson" : "hintsoff")
                 touchStartLoc = CGRect(x: 0, y: 0, width: 0, height: 0)
                 return
             }
