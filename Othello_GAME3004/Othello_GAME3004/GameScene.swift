@@ -16,6 +16,7 @@ class GameScene: SKScene {
     //set board dimensions; internalize game board array
     let boardSize: Int = 8
     var gameBoard: [[Character]]!
+    var numTurnsPassed: Int = 0                 //how many turns have passed without the board state changing?
     var gameOver: Bool = false
     
     //character tokens for internal array handling
@@ -44,8 +45,8 @@ class GameScene: SKScene {
     var blackDisc: SKSpriteNode!
     var whiteDisc: SKSpriteNode!
     var hintSprite: SKSpriteNode!
-    let cpuDelay: Double = 1.5                  //how long the CPU delays itself before making a move (for the sake of R E A L I S M)
-    var hintsActive: Bool = true                //
+    var hintsActive: Bool = true
+    let cpuDelay: Double = 1.0                  //how long the CPU delays itself before making a move (for the sake of R E A L I S M)
     
     //text display
     let playerTurnLabel: SKLabelNode! = SKLabelNode(text: "Black's turn.")
@@ -58,7 +59,7 @@ class GameScene: SKScene {
     var blackToWhiteAnim: SKAction!
     var whiteToBlackAnim: SKAction!
     let animTimePerFrame: Double = 0.05         //length of 1 frame in the disc-flipping animation
-    let animDelay: Double = 0.6                 //length of the delay before re-allowing input after the animation has started
+    let animDelay: Double = 0.6                 //length of the delay before re-allowing input since starting the animation
     
     //buttons
     var pauseButton: SKSpriteNode!
@@ -419,9 +420,7 @@ class GameScene: SKScene {
         DispatchQueue.main.asyncAfter(deadline: .now() + animDelay, execute: { self.inputEnabled = true })
     }
 	
-    //used by AI to determine all possible valid spsots to place a tile
-    //also used by players to draw hint sprites on board
-    //the parameter is unnecessary because the AI will always play as white, but is left in in case we decide to implement hint displays for the player
+    //returns all possible valid spsots to place a tile as an array of array of 2 ints in the format [row, col]
     func FindValidMoves(colour: Character) -> [[Int]] {
         var validMoves: [[Int]] = [[Int]]()
         
@@ -449,19 +448,64 @@ class GameScene: SKScene {
     //AI - places a tile in a valid spot at random
     //always plays as white
     func RunCPU() {
-        var possibleValidMoves: [[Int]] = FindValidMoves(colour: white)
+        var validCpuMoves: [[Int]] = FindValidMoves(colour: white)
         
-        let randNum: Int = Int(arc4random_uniform(UInt32(possibleValidMoves.count)))
-        if possibleValidMoves.count != 0 {
-            let randChoice: [Int] = possibleValidMoves[randNum]
+        if validCpuMoves.count != 0 {
+            let randNum: Int = Int(arc4random_uniform(UInt32(validCpuMoves.count)))
+            let randChoice: [Int] = validCpuMoves[randNum]
+            
             DispatchQueue.main.asyncAfter(deadline: .now() + cpuDelay, execute: {
                 print("CPU has selected to make move at \(randChoice)")
                 self.PlaceDisc(colour: self.white, r: randChoice[0], c: randChoice[1])
-                DispatchQueue.main.asyncAfter(deadline: .now() + self.animDelay, execute: { self.PassTurn() } )
+                DispatchQueue.main.asyncAfter(deadline: .now() + self.animDelay, execute: { self.PassTurn() })
             })
         }
         else {
-            PassTurn()
+            DispatchQueue.main.asyncAfter(deadline: .now() + cpuDelay, execute: { self.PassTurn() })
+        }
+    }
+    
+    func PassTurn() {
+        if currentTurn == black {
+            if FindValidMoves(colour: white).count != 0 {
+                numTurnsPassed = 0
+                currentTurn = white
+                if singlePlayer {
+                    RunCPU()
+                }
+                else {
+                    if (hintsActive) {
+                        DrawHints()
+                    }
+                }
+            }
+            else {
+                numTurnsPassed += 1
+                if numTurnsPassed == 2 {
+                    gameOver = true
+                }
+                else {
+                    PassTurn()
+                }
+            }
+        }
+        else {
+            if FindValidMoves(colour: black).count != 0 {
+                numTurnsPassed = 0
+                currentTurn = black
+                if (hintsActive) {
+                    DrawHints()
+                }
+            }
+            else {
+                numTurnsPassed += 1
+                if numTurnsPassed == 2 {
+                    gameOver = true
+                }
+                else {
+                    PassTurn()
+                }
+            }
         }
     }
     
@@ -469,31 +513,12 @@ class GameScene: SKScene {
         fatalError("Init(coder: ) has not been implemented")
     }
     
-    func PassTurn() {
-        if currentTurn == black {
-            currentTurn = white
-            if singlePlayer {
-                RunCPU()
-            }
-            else {
-                if (hintsActive) {
-                    DrawHints()
-                }
-            }
-        }
-        else if currentTurn == white {
-            currentTurn = black
-            if (hintsActive) {
-                DrawHints()
-            }
-        }
-    }
-    
     //checks if the board is full; if it is, then game is over
 	func CheckGameOver(){
         gameOver = blackCount + whiteCount >= boardSize * boardSize
     }
     
+    //returns number of discs of <colour> colour on the game board
     func GetDiscCount(colour: Character) -> Int{
         var discCount: Int = 0
         
@@ -534,6 +559,7 @@ class GameScene: SKScene {
         CheckGameOver()
     }
     
+    //tries to play <url>
     func PlaySound(url: URL) {
         do {
             audioPlayer = try AVAudioPlayer(contentsOf: url)
