@@ -15,21 +15,16 @@ class HowToPlayScene: SKScene {
     var clickParticle: SKEmitterNode!
     var touchStartLoc: CGRect!
     
-    var titleLabel: SKLabelNode!
-    
-    var howToPlayLabel: SKLabelNode!
-    var instructionsLabel: SKLabelNode!
-    var objectiveTitleLabel: SKLabelNode!
-    var objectiveLabel: SKLabelNode!
-    
     var backButton: SKSpriteNode!
     
+    var titleLabel: SKLabelNode!
+    var howtoplayLabel1: SKLabelNode!
+    var howtoplayLabel2: SKLabelNode!
+
     var soundOn: Bool = UserDefaults.standard.bool(forKey: "sound")
     var audioPlayer = AVAudioPlayer()
     let sfxClickDown: URL! = Bundle.main.url(forResource: "button-click-down", withExtension: "mp3", subdirectory: "Sounds")
     let sfxClickUp: URL! = Bundle.main.url(forResource: "button-click-up", withExtension: "mp3", subdirectory: "Sounds")
-    
-    
     
     override init(size: CGSize) {
         super.init(size: size)
@@ -44,54 +39,34 @@ class HowToPlayScene: SKScene {
         backButton = SKSpriteNode(texture: SKTexture(imageNamed: "back"))
         addChild(backButton)
         backButton.anchorPoint = CGPoint(x: 0, y: 0)
-        //backButton.setScale(UIScreen.main.bounds.width / (UIScreen.main.bounds.width * 3))
-        
         backButton.position = CGPoint(x: UIScreen.main.bounds.width * 0.05, y: UIScreen.main.bounds.width * 0.05)
         backButton.setScale((UIScreen.main.bounds.width / backButton.frame.width) * 0.18)
         
-        titleLabel = SKLabelNode(fontNamed: "Timeless")
-        titleLabel.text = "How To Play"
-        titleLabel.position = CGPoint(x: UIScreen.main.bounds.width * 0.5, y: UIScreen.main.bounds.height * 8.5/10)
-        titleLabel.fontSize = UIScreen.main.bounds.width/8
+        titleLabel = SKLabelNode(text: "How to Play")
+        titleLabel.fontName = "Timeless"
+        titleLabel.fontSize = UIScreen.main.bounds.width * 0.125
+        titleLabel.position = CGPoint(x: UIScreen.main.bounds.width * 0.5, y: UIScreen.main.bounds.height * 0.85)
         addChild(titleLabel)
         
-        howToPlayLabel = SKLabelNode(text: "~ How to Play ~")
-        howToPlayLabel.fontName = "Timeless"
-        howToPlayLabel.horizontalAlignmentMode = .center
-        howToPlayLabel.verticalAlignmentMode = .top
-        howToPlayLabel.position = CGPoint(x: UIScreen.main.bounds.width * 0.5, y: UIScreen.main.bounds.height  * 0.8)
-        howToPlayLabel.fontSize = UIScreen.main.bounds.width/18
-        addChild(howToPlayLabel)
+        howtoplayLabel1 = SKLabelNode(text: "Each turn, the player places one disc on the board. Each disc played must be placed adjacent to an opponent's disc such that a row of 1 or more of the opponent's discs is flanked by the new disc and an existing disc of the player's colour. All of the opponent's discs between these two discs are turned over to match the player's colour.")
+        howtoplayLabel1.fontName = "Timeless"
+        howtoplayLabel1.fontSize = UIScreen.main.bounds.width * 0.055
+        howtoplayLabel1.numberOfLines = 0
+        howtoplayLabel1.horizontalAlignmentMode = .left
+        howtoplayLabel1.verticalAlignmentMode = .top
+        howtoplayLabel1.preferredMaxLayoutWidth = UIScreen.main.bounds.width * 0.8
+        howtoplayLabel1.position = CGPoint(x: UIScreen.main.bounds.width * 0.1, y: UIScreen.main.bounds.height * 0.8)
+        addChild(howtoplayLabel1)
         
-        instructionsLabel = SKLabelNode(text: "Each turn, the player places one disc on the board. Each disc played must be laid adjacent to an opponent's disc so that the opponent's disc or a row of opponent's discs is flanked by the new disc and another disc of the player's colour. All of the opponent's discs between these two discs are 'captured' and turned over to match the player's colour.")
-        instructionsLabel.fontName = "Timeless"
-        instructionsLabel.numberOfLines = 0
-        instructionsLabel.horizontalAlignmentMode = .left
-        instructionsLabel.verticalAlignmentMode = .top
-        instructionsLabel.preferredMaxLayoutWidth = UIScreen.main.bounds.width * 0.8
-        instructionsLabel.position = CGPoint(x: UIScreen.main.bounds.width  * 0.1, y: UIScreen.main.bounds.height  * 0.75)
-        instructionsLabel.fontSize = UIScreen.main.bounds.width/18
-        addChild(instructionsLabel)
-
-        
-        objectiveTitleLabel = SKLabelNode(text: "~ Objective ~")
-        objectiveTitleLabel.fontName = "Timeless"
-        objectiveTitleLabel.horizontalAlignmentMode = .center
-        objectiveTitleLabel.verticalAlignmentMode = .top
-        objectiveTitleLabel.position = CGPoint(x: UIScreen.main.bounds.width * 0.5, y: UIScreen.main.bounds.height  * 0.25)
-        objectiveTitleLabel.fontSize = UIScreen.main.bounds.width/18
-        addChild(objectiveTitleLabel)
-        
-        
-        objectiveLabel = SKLabelNode(text: "To have the most discs on the board when the game ends.")
-        objectiveLabel.fontName = "Timeless"
-        objectiveLabel.numberOfLines = 0
-        objectiveLabel.horizontalAlignmentMode = .left
-        objectiveLabel.verticalAlignmentMode = .top
-        objectiveLabel.preferredMaxLayoutWidth = UIScreen.main.bounds.width * 0.8
-        objectiveLabel.position = CGPoint(x: UIScreen.main.bounds.width * 0.1, y: UIScreen.main.bounds.height  * 0.2)
-        objectiveLabel.fontSize = UIScreen.main.bounds.width/18
-        addChild(objectiveLabel)
+        howtoplayLabel2 = SKLabelNode(text: "If the current player cannot make a valid move, the turn is passed to the other player. The game is over when neither player can make a valid move, or when the board is full. The player that has the most discs of their colour on the board when the game ends is the winner.")
+        howtoplayLabel2.fontName = "Timeless"
+        howtoplayLabel2.fontSize = UIScreen.main.bounds.width * 0.055
+        howtoplayLabel2.numberOfLines = 0
+        howtoplayLabel2.horizontalAlignmentMode = .left
+        howtoplayLabel2.verticalAlignmentMode = .top
+        howtoplayLabel2.preferredMaxLayoutWidth = UIScreen.main.bounds.width * 0.8
+        howtoplayLabel2.position = CGPoint(x: UIScreen.main.bounds.width * 0.1, y: UIScreen.main.bounds.height * 0.4)
+        addChild(howtoplayLabel2)
     }
     
     required init?(coder aDecoder: NSCoder) {
