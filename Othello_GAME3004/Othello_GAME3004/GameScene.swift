@@ -97,7 +97,8 @@ class GameScene: SKScene {
         
         hintButton = SKSpriteNode(texture: SKTexture(imageNamed: hintsActive ? "hintson" : "hintsoff"))
         addChild(hintButton)
-        hintButton.setScale((UIScreen.main.bounds.width / hintButton.frame.width) * 0.4)
+        hintButton.anchorPoint.y = 0
+        hintButton.setScale((UIScreen.main.bounds.width / hintButton.frame.width) * 0.36)
         hintButton.position = CGPoint(x: UIScreen.main.bounds.width * 0.5, y: UIScreen.main.bounds.width * 0.05)
         
         sfxClickDown = Bundle.main.url(forResource: "button-click-down", withExtension: "mp3", subdirectory: "Sounds")
@@ -174,16 +175,14 @@ class GameScene: SKScene {
     }
     
     //sets starting game state
-    func InitGameState(){
+    func InitGameState() {
         gameBoard = [[Character]](repeating: [Character](repeating: " ", count: boardSize), count: boardSize)
         print(singlePlayer ? "1P selected" : "2P selected")
-        for i in 0..<boardSize
-        {
-            for j in 0..<boardSize
-            {
+        for i in 0..<boardSize {
+            for j in 0..<boardSize {
                 gameBoard[i][j] = empty
             }
-        }        
+        }
         
         gameBoard[3][3] = white
         gameBoard[3][4] = black
@@ -235,11 +234,11 @@ class GameScene: SKScene {
     
     //renders hint sprites at valid move positions for the player(s)
     func DrawHints() {
-        var possibleValidMoves: [[Int]] = FindValidMoves(colour: currentTurn)
+        var validMoves: [[Int]] = FindValidMoves(colour: currentTurn)
         
-        for i in 0..<possibleValidMoves.count {
-            let r: Int = possibleValidMoves[i][0]
-            let c: Int = possibleValidMoves[i][1]
+        for i in 0..<validMoves.count {
+            let r: Int = validMoves[i][0]
+            let c: Int = validMoves[i][1]
             
             let hintCopy = hintSprite.copy() as! SKSpriteNode
             hintCopy.texture = SKTexture(imageNamed: currentTurn == black ? "black0" : "white0")
@@ -471,12 +470,14 @@ class GameScene: SKScene {
         }
     }
     
+    //handles turn passing logic
+    //can be optimized
     func PassTurn() {
         if currentTurn == black {
-            if FindValidMoves(colour: white).count != 0 {
-                numTurnsPassed = 0
-                currentTurn = white
-                if singlePlayer {
+            if FindValidMoves(colour: white).count != 0 {           //if a move can be made...
+                numTurnsPassed = 0                                  //reset 'turns passed' counter
+                currentTurn = white                                 //pass turn over to other colour
+                if singlePlayer {                                   //if 1P, run CPU; otherwise draw hints for white
                     RunCPU()
                 }
                 else {
@@ -485,17 +486,18 @@ class GameScene: SKScene {
                     }
                 }
             }
-            else {
-                numTurnsPassed += 1
-                if numTurnsPassed == 2 {
-                    gameOver = true
-                }
-                else {
+            else {                                                  //if a move can't be made...
+                if numTurnsPassed < 2 {                             //if turn hasn't been passed over once already...
+                    numTurnsPassed += 1                             //increment 'turns passed' counter, pass turn over to other colour
+                    currentTurn = white
                     PassTurn()
+                }
+                else {                                              //if turn has been passed over once already, game is over because
+                    gameOver = true                                 //no valid move can be made with either colour
                 }
             }
         }
-        else {
+        else {                                                      //same thing for other colour, except without CPU handling
             if FindValidMoves(colour: black).count != 0 {
                 numTurnsPassed = 0
                 currentTurn = black
@@ -504,12 +506,13 @@ class GameScene: SKScene {
                 }
             }
             else {
-                numTurnsPassed += 1
-                if numTurnsPassed == 2 {
-                    gameOver = true
+                if numTurnsPassed < 2 {
+                    numTurnsPassed += 1
+                    currentTurn = black
+                    PassTurn()
                 }
                 else {
-                    PassTurn()
+                    gameOver = true
                 }
             }
         }
@@ -521,7 +524,9 @@ class GameScene: SKScene {
     
     //checks if the board is full; if it is, then game is over
 	func CheckGameOver(){
-        gameOver = blackCount + whiteCount >= boardSize * boardSize
+        if blackCount + whiteCount >= boardSize * boardSize {
+            gameOver = true
+        }
     }
     
     //returns number of discs of <colour> colour on the game board
@@ -605,8 +610,10 @@ class GameScene: SKScene {
 			
             if !gameOver && inputEnabled {
                 if board.frame.contains(t.location(in: self)) {
+                    //convert tap location from pixels to array index
                     let row: Int = Int(floor((board.frame.maxY - t.location(in: self).y) / (board.frame.height / 8)))
                     let col: Int = Int(floor((t.location(in: self).x - board.frame.minX) / (board.frame.width / 8)))
+                    
                     if IsValidMove(colour: currentTurn, r: row, c: col) {
                         RemoveHints()
                         PlaceDisc(colour: currentTurn, r: row, c: col)
@@ -639,19 +646,15 @@ class GameScene: SKScene {
                 UserDefaults.standard.set(soundOn, forKey: "sound")
             }
             
-            
-            
             if (hintButton.frame.contains(t.location(in: self)) && touchStartLoc!.equalTo(hintButton.frame)) {
                 if (hintsActive) {
                     hintButton.texture = SKTexture(imageNamed: "hintsoff")
-                    //hintsActive = false
                     ToggleHints()
                     PlaySound(url: sfxClickUp)
                 }
                 else
                 {
                     hintButton.texture = SKTexture(imageNamed: "hintson")
-                    //hintsActive = true
                     ToggleHints()
                     PlaySound(url: sfxClickUp)
                 }
