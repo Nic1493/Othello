@@ -127,7 +127,7 @@ class GameScene: SKScene {
         
         blackCountLabel = SKLabelNode(text: "\(blackCount)")
         blackCountLabel.fontName = "Timeless"
-        blackCountLabel.position = CGPoint(x: UIScreen.main.bounds.width * 3/4, y: blackTitleLabel.position.y - 50)
+        blackCountLabel.position = CGPoint(x: UIScreen.main.bounds.width * 3/4, y: (board.frame.maxY + UIScreen.main.bounds.height) / 2 - blackTitleLabel.frame.height)
         blackCountLabel.fontSize = UIScreen.main.bounds.width/10
         blackCountLabel.horizontalAlignmentMode = .center
         blackCountLabel.numberOfLines = 0
@@ -135,7 +135,7 @@ class GameScene: SKScene {
         
         whiteCountLabel = SKLabelNode(text: "\(whiteCount)")
         whiteCountLabel.fontName = "Timeless"
-        whiteCountLabel.position = CGPoint(x: UIScreen.main.bounds.width * 1/4, y: whiteTitleLabel.position.y - 50)
+        whiteCountLabel.position = CGPoint(x: UIScreen.main.bounds.width * 1/4, y: (board.frame.maxY + UIScreen.main.bounds.height) / 2 - whiteTitleLabel.frame.height)
         whiteCountLabel.fontSize = UIScreen.main.bounds.width/10
         whiteCountLabel.horizontalAlignmentMode = .center
         whiteCountLabel.numberOfLines = 0
