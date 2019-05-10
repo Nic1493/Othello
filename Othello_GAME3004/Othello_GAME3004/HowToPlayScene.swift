@@ -50,7 +50,7 @@ class HowToPlayScene: SKScene {
         
         howtoplayLabel1 = SKLabelNode(text: "Each turn, the player places one disc on the board. Each disc played must be placed adjacent to an opponent's disc such that a row of 1 or more of the opponent's discs is flanked by the new disc and an existing disc of the player's colour. All of the opponent's discs between these two discs are turned over to match the player's colour.")
         howtoplayLabel1.fontName = "Timeless"
-        howtoplayLabel1.fontSize = UIScreen.main.bounds.width * 0.055
+        howtoplayLabel1.fontSize = UIScreen.main.bounds.height * 0.025
         howtoplayLabel1.numberOfLines = 0
         howtoplayLabel1.horizontalAlignmentMode = .left
         howtoplayLabel1.verticalAlignmentMode = .top
@@ -60,7 +60,7 @@ class HowToPlayScene: SKScene {
         
         howtoplayLabel2 = SKLabelNode(text: "If the current player cannot make a valid move, the turn is passed to the other player. The game is over when neither player can make a valid move, or when the board is full. The player that has the most discs of their colour on the board when the game ends is the winner.")
         howtoplayLabel2.fontName = "Timeless"
-        howtoplayLabel2.fontSize = UIScreen.main.bounds.width * 0.055
+        howtoplayLabel2.fontSize = UIScreen.main.bounds.height * 0.025
         howtoplayLabel2.numberOfLines = 0
         howtoplayLabel2.horizontalAlignmentMode = .left
         howtoplayLabel2.verticalAlignmentMode = .top
