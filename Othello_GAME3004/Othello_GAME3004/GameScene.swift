@@ -454,6 +454,7 @@ class GameScene: SKScene {
     //always plays as white
     func RunCPU() {
         var validCpuMoves: [[Int]] = FindValidMoves(colour: white)
+        inputEnabled = false
         
         if validCpuMoves.count != 0 {
             let randNum: Int = Int(arc4random_uniform(UInt32(validCpuMoves.count)))
@@ -462,11 +463,17 @@ class GameScene: SKScene {
             DispatchQueue.main.asyncAfter(deadline: .now() + cpuDelay, execute: {
                 print("CPU has selected to make move at \(randChoice)")
                 self.PlaceDisc(colour: self.white, r: randChoice[0], c: randChoice[1])
-                DispatchQueue.main.asyncAfter(deadline: .now() + self.animDelay, execute: { self.PassTurn() })
+                DispatchQueue.main.asyncAfter(deadline: .now() + self.animDelay, execute: {
+                    self.PassTurn()
+                    self.inputEnabled = true
+                })
             })
         }
         else {
-            DispatchQueue.main.asyncAfter(deadline: .now() + cpuDelay, execute: { self.PassTurn() })
+            DispatchQueue.main.asyncAfter(deadline: .now() + cpuDelay, execute: {
+                self.PassTurn()
+                self.inputEnabled = true
+            })
         }
     }
     
@@ -581,23 +588,25 @@ class GameScene: SKScene {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches {
-            if pauseButton.frame.contains(t.location(in: self)) {
-                pauseButton.texture = SKTexture(imageNamed: "back-pressed")
-                PlaySound(url: sfxClickDown)
-                touchStartLoc = pauseButton.frame
-            }
-            
-            if (soundButton.frame.contains(t.location(in: self))) {
-                soundButton.texture = SKTexture(imageNamed: soundOn ? "soundon-pressed" : "soundoff-pressed")
-                PlaySound(url: sfxClickDown)
-                touchStartLoc = soundButton.frame
-            }
-            
-            if hintButton.frame.contains(t.location(in: self)) {
-                hintButton.texture = SKTexture(imageNamed: hintsActive ? "hintson-pressed" : "hintsoff-pressed")
-                PlaySound(url: sfxClickDown)
-                touchStartLoc = hintButton.frame
+        if inputEnabled {
+            for t in touches {
+                if pauseButton.frame.contains(t.location(in: self)) {
+                    pauseButton.texture = SKTexture(imageNamed: "back-pressed")
+                    PlaySound(url: sfxClickDown)
+                    touchStartLoc = pauseButton.frame
+                }
+                
+                if (soundButton.frame.contains(t.location(in: self))) {
+                    soundButton.texture = SKTexture(imageNamed: soundOn ? "soundon-pressed" : "soundoff-pressed")
+                    PlaySound(url: sfxClickDown)
+                    touchStartLoc = soundButton.frame
+                }
+                
+                if hintButton.frame.contains(t.location(in: self)) {
+                    hintButton.texture = SKTexture(imageNamed: hintsActive ? "hintson-pressed" : "hintsoff-pressed")
+                    PlaySound(url: sfxClickDown)
+                    touchStartLoc = hintButton.frame
+                }
             }
         }
     }
@@ -608,66 +617,68 @@ class GameScene: SKScene {
             clickParticle.position = t.location(in: self)
             scene?.addChild(clickParticle)
 			
-            if !gameOver && inputEnabled {
-                if board.frame.contains(t.location(in: self)) {
-                    //convert tap location from pixels to array index
-                    let row: Int = Int(floor((board.frame.maxY - t.location(in: self).y) / (board.frame.height / 8)))
-                    let col: Int = Int(floor((t.location(in: self).x - board.frame.minX) / (board.frame.width / 8)))
-                    
-                    if IsValidMove(colour: currentTurn, r: row, c: col) {
-                        RemoveHints()
-                        PlaceDisc(colour: currentTurn, r: row, c: col)
-                        DispatchQueue.main.asyncAfter(deadline: .now() + animDelay, execute: {self.PassTurn()})
+            if inputEnabled {
+                if !gameOver {
+                    if board.frame.contains(t.location(in: self)) {
+                        //convert tap location from pixels to array index
+                        let row: Int = Int(floor((board.frame.maxY - t.location(in: self).y) / (board.frame.height / 8)))
+                        let col: Int = Int(floor((t.location(in: self).x - board.frame.minX) / (board.frame.width / 8)))
+                        
+                        if IsValidMove(colour: currentTurn, r: row, c: col) {
+                            RemoveHints()
+                            PlaceDisc(colour: currentTurn, r: row, c: col)
+                            DispatchQueue.main.asyncAfter(deadline: .now() + animDelay, execute: {self.PassTurn()})
+                        }
                     }
                 }
-            }
-			
-            if (pauseButton.frame.contains(t.location(in: self)) && touchStartLoc!.equalTo(pauseButton.frame)) {
-                let scene = MainMenuScene(size: self.size)
-                let transition = SKTransition.doorsCloseHorizontal(withDuration: 0.5)
-                self.view?.presentScene(scene, transition:transition)
-                PlaySound(url: sfxClickUp)
-            }
             
-            if (soundButton.frame.contains(t.location(in: self)) && touchStartLoc!.equalTo(soundButton.frame)) {
-                if (soundOn) {
-                    soundButton.texture = SKTexture(imageNamed: "soundoff")
-                    soundOn = false
-                    //no need to play sound here
-                }
-                else
-                {
-                    soundButton.texture = SKTexture(imageNamed: "soundon")
-                    soundOn = true
+                if (pauseButton.frame.contains(t.location(in: self)) && touchStartLoc!.equalTo(pauseButton.frame)) {
+                    let scene = MainMenuScene(size: self.size)
+                    let transition = SKTransition.doorsCloseHorizontal(withDuration: 0.5)
+                    self.view?.presentScene(scene, transition:transition)
                     PlaySound(url: sfxClickUp)
                 }
-                
-                //save sound state
-                UserDefaults.standard.set(soundOn, forKey: "sound")
-            }
             
-            if (hintButton.frame.contains(t.location(in: self)) && touchStartLoc!.equalTo(hintButton.frame)) {
-                if (hintsActive) {
-                    hintButton.texture = SKTexture(imageNamed: "hintsoff")
-                    ToggleHints()
-                    PlaySound(url: sfxClickUp)
+                if (soundButton.frame.contains(t.location(in: self)) && touchStartLoc!.equalTo(soundButton.frame)) {
+                    if (soundOn) {
+                        soundButton.texture = SKTexture(imageNamed: "soundoff")
+                        soundOn = false
+                        //no need to play sound here
+                    }
+                    else
+                    {
+                        soundButton.texture = SKTexture(imageNamed: "soundon")
+                        soundOn = true
+                        PlaySound(url: sfxClickUp)
+                    }
+                    
+                    //save sound state
+                    UserDefaults.standard.set(soundOn, forKey: "sound")
                 }
-                else
-                {
-                    hintButton.texture = SKTexture(imageNamed: "hintson")
-                    ToggleHints()
-                    PlaySound(url: sfxClickUp)
+            
+                if (hintButton.frame.contains(t.location(in: self)) && touchStartLoc!.equalTo(hintButton.frame)) {
+                    if (hintsActive) {
+                        hintButton.texture = SKTexture(imageNamed: "hintsoff")
+                        ToggleHints()
+                        PlaySound(url: sfxClickUp)
+                    }
+                    else
+                    {
+                        hintButton.texture = SKTexture(imageNamed: "hintson")
+                        ToggleHints()
+                        PlaySound(url: sfxClickUp)
+                    }
                 }
-            }
-			
-            if (!pauseButton.frame.contains(t.location(in: self)) ||
-                !soundButton.frame.contains(t.location(in: self)) ||
-                !hintButton.frame.contains(t.location(in: self))) {
-                pauseButton.texture = SKTexture(imageNamed: "back")
-                soundButton.texture = SKTexture(imageNamed: soundOn ? "soundon" : "soundoff")
-                hintButton.texture = SKTexture(imageNamed: hintsActive ? "hintson" : "hintsoff")
-                touchStartLoc = CGRect(x: 0, y: 0, width: 0, height: 0)
-                return
+            
+                if (!pauseButton.frame.contains(t.location(in: self)) ||
+                    !soundButton.frame.contains(t.location(in: self)) ||
+                    !hintButton.frame.contains(t.location(in: self))) {
+                    pauseButton.texture = SKTexture(imageNamed: "back")
+                    soundButton.texture = SKTexture(imageNamed: soundOn ? "soundon" : "soundoff")
+                    hintButton.texture = SKTexture(imageNamed: hintsActive ? "hintson" : "hintsoff")
+                    touchStartLoc = CGRect(x: 0, y: 0, width: 0, height: 0)
+                    return
+                }
             }
         }
     }

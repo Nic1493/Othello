@@ -22,7 +22,7 @@ class MainMenuScene: SKScene {
     var howToPlayButton: SKSpriteNode!
     var soundButton: SKSpriteNode!
     
-    var soundOn: Bool = true
+    var soundOn: Bool = UserDefaults.standard.bool(forKey: "sound")
     var audioPlayer = AVAudioPlayer()
     var sfxClickDown: URL!
     var sfxClickUp: URL!
